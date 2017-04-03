@@ -221,7 +221,7 @@ class MarathonTransformer(BaseTransformer):
 
         container_data['container']['docker']['forcePullImage'] = True
         container_data['container']['type'] = 'DOCKER'
-        container_data['acceptedResourceRoles'] = []
+        container_data['acceptedResourceRoles'] = ["*"]
         if container_data.get('container', {}).get('docker', {}).get('portMappings'):
             container_data["healthChecks"] = [
                 {
