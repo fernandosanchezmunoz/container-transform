@@ -10,7 +10,7 @@ fi
 #change to subdirectory
 cd ./examples/"$1"
 
-container-transform -i compose -o marathon docker-compose.yaml > marathon.json && \
+container-transform -i compose -o marathon docker-compose.yml > marathon.json && \
 ../../container_transform/marathon_group.py -i marathon.json -n ${PWD##*/}  > group.json && \
 dcos marathon group add ./group.json
 
