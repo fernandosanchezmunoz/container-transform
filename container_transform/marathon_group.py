@@ -13,17 +13,36 @@ def create_group ( name, containers ):
 	Creates a marathon group taking a list of containers as a parameter.
 	If the list has a single member if returns the member.
 	"""
-
-	#TODO: If the input is not a list, return null
-
-	#TODO: If the input list has a single member, return it
-
 	output = '{ 			\
 	  "id": "'+name+'",		\
 	  "apps": '+containers+'\
 	  }'
 
-	return str(output) 
+	return str(output)
+
+def modify_group ( group ):
+	"""
+	Modifies a marathon group received as a printable string to adapt the apps inside it 
+	to the desired parameters.
+	Adds AcceptedResourceRoles = "*"
+	Deletes any hostPort values to have Marathon assign them automatically.
+	Adds a label HAPROXY_GROUP=external for all hostPort values.
+	Returns the group as a modified string.
+	"""
+
+	group_dict = json.loads( group )
+
+	for app in group_dict['apps']:
+		app['acceptedResourceRoles'] += "*"
+		for portMapping in app.get('container',{}).get('docker',{}).get('portMappings',{}):
+			if portMapping.get('hostPort',{}): 	#delete ANY hostPort values
+				portMapping['hostPort'] = 0
+				if 'labels' in app:
+					app['labels'] += { "HAPROXY_GROUP": "external" } #if there was a hostPort add to MLB
+				else:
+					app['labels'] = { "HAPROXY_GROUP": "external" }
+		
+	return json.dumps( group_dict )
 
 if __name__ == "__main__":
 
@@ -39,6 +58,10 @@ if __name__ == "__main__":
 	containers = ""
 	for line in open( args['input'], 'r' ):
 		containers += line.rstrip()
-	print( create_group( args['name'], containers ) )
+	#print( create_group( args['name'], containers ) )
+	group = create_group( args['name'], containers ) 
+	modified_group = modify_group( group )
+	print( modified_group )
+
 	sys.exit(0)
 

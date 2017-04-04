@@ -1,0 +1,39 @@
+[
+    {
+        "acceptedResourceRoles": [],
+        "container": {
+            "docker": {
+                "forcePullImage": true,
+                "image": "redis",
+                "network": "BRIDGE"
+            },
+            "type": "DOCKER"
+        },
+        "fetch": [],
+        "id": "redis"
+    },
+    {
+        "acceptedResourceRoles": [],
+        "container": {
+            "docker": {
+                "forcePullImage": true,
+                "image": "nginx",
+                "network": "BRIDGE",
+                "portMappings": [
+                    {
+                        "containerPort": 8000,
+                        "hostPort": 8000,
+                        "protocol": "tcp"
+                    }
+                ]
+            },
+            "type": "DOCKER"
+        },
+        "dependencies": [
+            "/redis"
+        ],
+        "fetch": [],
+        "id": "web",
+        "requirePorts": true
+    }
+]
