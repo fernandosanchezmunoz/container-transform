@@ -39,7 +39,6 @@ if __name__ == "__main__":
 	containers = ""
 	for line in open( args['input'], 'r' ):
 		containers += line.rstrip()
-#	print ( "** DEBUG: containers is \n {0}".format(containers))
 	print( create_group( args['name'], containers ) )
 	sys.exit(0)
 
