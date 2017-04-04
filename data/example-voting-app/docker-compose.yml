@@ -1,0 +1,66 @@
+version: "2"
+
+services:
+  voting-app:
+    build: ./voting-app/.
+    volumes:
+     - ./voting-app:/app
+    ports:
+      - "5000:9080"
+    networks:
+      - front-tier
+      - back-tier
+
+  result-app:
+    build: ./result-app/.
+    volumes:
+      - ./result-app:/app
+    ports:
+      - "5001:9080"
+    networks:
+      - front-tier
+      - back-tier
+
+  worker:
+    build: ./worker
+    networks:
+      - back-tier
+
+  wxs-cat:
+    build: ./wxs_cat
+    hostname: wxs
+    expose:
+      - "2809"
+    networks:
+      back-tier:
+        aliases:
+            - wxs
+ 
+  wxs-con:
+   build: ./wxs_con
+   depends_on:
+      - wxs-cat
+   networks:
+      - back-tier
+
+  db:
+    build: ./db2/.
+    environment:
+      DB2INST1_PASSWORD: db2inst1
+      LICENSE: accept
+    command: db2start
+    expose:
+      - "50000"
+    volumes:
+      - "db-data:/home/db2inst1/db2inst1"
+    networks:
+      - back-tier
+
+volumes:
+  db-data:
+
+networks:
+  front-tier:
+  back-tier:
+
+
