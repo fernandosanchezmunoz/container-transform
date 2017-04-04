@@ -1,0 +1,14 @@
+version: "2"
+services:
+  master:
+    build: .
+    command: -H http://kome.inokara.com --master
+    ports:
+      - "8080:8089"
+    image: hakobera/locust
+  slave:
+    build: .
+    command: --slave --master-host=master
+    image: hakobera/locust
+    depends_on:
+      - master

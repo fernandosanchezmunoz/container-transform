@@ -1,0 +1,21 @@
+{
+        "acceptedResourceRoles": ["*"],
+        "container": {
+            "docker": {
+                "forcePullImage": true,
+                "image": "ghost",
+                "network": "BRIDGE",
+                "portMappings": [
+                    {
+                        "containerPort": 2368,
+                        "hostPort": 80,
+                        "protocol": "tcp"
+                    }
+                ]
+            },
+            "type": "DOCKER"
+        },
+        "fetch": [],
+        "id": "ghost",
+        "requirePorts": true
+}

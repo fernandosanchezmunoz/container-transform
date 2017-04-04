@@ -1,0 +1,62 @@
+[
+    {
+        "acceptedResourceRoles": [],
+        "args": [
+            "-H",
+            "http://kome.inokara.com",
+            "--master"
+        ],
+        "container": {
+            "docker": {
+                "forcePullImage": true,
+                "image": "hakobera/locust",
+                "network": "BRIDGE",
+                "portMappings": [
+                    {
+                        "containerPort": 8089,
+                        "hostPort": 8080,
+                        "protocol": "tcp"
+                    }
+                ]
+            },
+            "type": "DOCKER"
+        },
+        "cpus": 1.0,
+        "fetch": [],
+        "healthChecks": [
+            {
+                "gracePeriodSeconds": 300,
+                "intervalSeconds": 60,
+                "maxConsecutiveFailures": 3,
+                "path": "/",
+                "portIndex": 0,
+                "protocol": "HTTP",
+                "timeoutSeconds": 20
+            }
+        ],
+        "id": "master",
+        "instances": 1,
+        "mem": 128,
+        "requirePorts": true
+    },
+    {
+        "acceptedResourceRoles": [],
+        "args": [
+            "--slave",
+            "--master-host=master"
+        ],
+        "container": {
+            "docker": {
+                "forcePullImage": true,
+                "image": "hakobera/locust",
+                "network": "BRIDGE"
+            },
+            "type": "DOCKER"
+        },
+        "cpus": 1.0,
+        "fetch": [],
+        "id": "slave",
+        "instances": 1,
+        "mem": 128
+    }
+]
