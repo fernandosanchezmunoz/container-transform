@@ -24,9 +24,11 @@ cd $WORKING_DIR
 container-transform -i compose -o marathon docker-compose.yml > marathon.json 
 echo "***** MARATHON.JSON *****"
 cat marathon.json
-../../container_transform/marathon_group.py -i marathon.json -n ${PWD##*/}  > group.json
+../../container_transform/marathon_group.py -i marathon.json -n ${PWD##*/}-"group"  > group.json
 echo "***** GROUP.JSON *****"
 cat group.json
+
+dcos auth login && \
 dcos marathon group add ./group.json
 
 cd $CURRENT_DIR
