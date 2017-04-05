@@ -76,17 +76,17 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	command = "rbd map "+external_volume_name
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
-	print("**DEBUG: output of rbd map is {}".format(out.decode('utf-8')))
+	#print("**DEBUG: output of rbd map is {}".format(out.decode('utf-8')))
 
 	#TODO error checking
 	external_volume_device = out.decode('utf-8')
-	print("**DEBUG: external_volume_device {}".format(external_volume_device))
+	#print("**DEBUG: external_volume_device {}".format(external_volume_device))
 	#create mount point
 	mount_point="/tmp/"+external_volume_name
 	command = "mkdir -p "+mount_point
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
-	print("**DEBUG: mount_point {}".format(mount_point))
+	#print("**DEBUG: mount_point {}".format(mount_point))
 
 	#mount the volume
 	command = "mount "+external_volume_device+" "+mount_point
