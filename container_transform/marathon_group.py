@@ -141,14 +141,14 @@ def modify_volume_for_external ( volume ):
 	- copy from local volume (apps,config,data/*) to subdir (/www/html/apps,config,data/)
 	"""
 	#get firstPartOfHostPath, etc.
-	host_path = volume['hostPath'][3:] 					#nextcloud/apps
-	#first_part_of_host_path = host_path.split('/' , 1)[0]	#nextcloud
-	#last_part_of_host_path = host_path.split('/' , 1)[1]		#apps...
-	container_path = volume['containerPath']							#/var/www/html/config
-	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#var - skip the first / character
-	last_part_of_container_path = container_path[1:].split('/', 1)[1]	#www/html/config....
-	#create a volume named nextcloud/apps
-	external_volume_name = host_path.replace('/','_')+'_'+first_part_of_container_path
+	host_path = volume['hostPath'][2:] 					#app
+	#first_part_of_host_path = host_path.split('/' , 1)[0]	#app
+	#last_part_of_host_path = host_path.split('/' , 1)[1]		#NULL
+	container_path = volume['containerPath']							#/src/app
+	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#src
+	last_part_of_container_path = container_path[1:].split('/', 1)[1]	#app
+	#create a volume 
+	external_volume_name = host_path.replace('/','_')
 	create_external_volume( external_volume_name ) #nextcloud_apps_UUID
 	#create internal directory structure
 	#create_path_in_external_volume( external_volume_name, "/"+last_part_of_container_path ) #add /www/html/config to volume
@@ -158,14 +158,14 @@ def modify_volume_for_external ( volume ):
 	#new_volume = volume.copy()
 	#modify volume
 	volume['external'] = { 						#mount it as external volume
-		'name': volume['hostPath'][1:],			#remove leading .
+		'name': host_path,
 		'provider': 'dvdi',
 		'options': { 
 		'dvdi/driver': 'rexray'
 		}
 	}
 	#change containerPath to the firstPiece only
-	volume['containerPath'] = first_part_of_container_path	#var		
+	volume['containerPath'] = first_part_of_container_path	#src		
 	del( volume['hostPath'] )							#external volumes do not use hostpath
 
 	return volume
