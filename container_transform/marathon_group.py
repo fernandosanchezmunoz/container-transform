@@ -54,43 +54,6 @@ def create_external_volume( external_volume_name ):
 
 	return out.decode('utf-8')
 
-def create_path_in_external_volume( external_volume_name, path ):
-	"""
-	Create a directory path in a Ceph external volume
-	"""
-	#check that the volume exists
-	command = "rbd ls | grep "+external_volume_name
-	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()	
-	if not external_volume_name in out.decode('utf-8'):
-		print('**ERROR: volume {0} to create path into not found'.format( external_volume_name ))
-		return False
-
-	#get volume dev name
-	command = "rbd map "+external_volume_name
-	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()
-	#TODO error checking
-	external_volume_device = out.decode('utf-8')
-
-	#create mount point
-	mount_point="/tmp/"+external_volume_name
-	command = "mkdir -p "+mount_point
-	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()		
-
-	#mount the volume
-	command = "mount "+external_volume_device+"_"+mount_point
-	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()	
-
-	#unmount the volume
-	command = "umount "+external_volume_device
-	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()	
-
-	return out.decode('utf-8')
-
 def	copy_content_to_external_volume( external_volume_name, source_path, dest_path ):
 	"""
 	Copy recursively the content in localhost under "path" to the external volume.
@@ -128,13 +91,13 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	(out, err) = proc.communicate()
 
 	#create path
-	command = "mkdir -p "+mount_point+"/"+dest_path
-	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()	
+	#command = "mkdir -p "+mount_point+"/"+dest_path
+	#proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
+	#(out, err) = proc.communicate()	
 
 
 	#recursively copy the content
-	command = "cp -R "+source_path+" "+mount_point+"/"+dest_path
+	command = "cp -R "+source_path+" "+mount_point
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
 
