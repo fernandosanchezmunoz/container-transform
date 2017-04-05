@@ -36,14 +36,14 @@ def create_external_volume( external_volume_name ):
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 	#TODO error checking
-	external_volume_device = str(out)
+	external_volume_device = out.decode('utf-8')
 
 	#format the volume
 	command = "mkfs.xfs -f "+external_volume_device
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
-	return out
+	return out.decode('utf-8')
 
 def create_path_in_external_volume( external_volume_name, path ):
 	"""
@@ -53,7 +53,7 @@ def create_path_in_external_volume( external_volume_name, path ):
 	command = "rbd ls | grep "+external_volume_name
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
-	if not external_volume_name in str(out):
+	if not external_volume_name in out.decode('utf-8'):
 		print('**ERROR: volume {0} to create path into not found'.format( external_volume_name ))
 		return False
 
@@ -62,30 +62,25 @@ def create_path_in_external_volume( external_volume_name, path ):
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 	#TODO error checking
-	external_volume_device = out
+	external_volume_device = out.decode('utf-8')
 
 	#create mount point
-	mount_point="/tmp/"+external_volume_name+path
+	mount_point="/tmp/"+external_volume_name
 	command = "mkdir -p "+mount_point
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
 
 	#mount the volume
-	command = "mount "+external_volume_device+" "+mount_point
-	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()	
-
-	#create path
-	command = "mkdir -p "+mount_point+"/"+path
+	command = "mount "+external_volume_device+"_"+mount_point
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
 
 	#unmount the volume
-	command = "umount "+mount_point
+	command = "umount "+external_volume_device
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
 
-	return out
+	return out.decode('utf-8')
 
 def	copy_content_to_external_volume( external_volume_name, source_path, dest_path ):
 	"""
@@ -96,13 +91,13 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	command = "rbd ls | grep "+external_volume_name
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
-	if not external_volume_name in str(out):
+	if not external_volume_name in out.decode('utf-8'):
 		print('**ERROR: volume {0} to copy content into not found'.format( external_volume_name ))
 		return False
 
 	#check that the local path exists
-	if not os.path.isdir( path ):
-		print('**ERROR: directory {0} to copy content from not found'.format( path ))
+	if not os.path.isdir( source_path ):
+		print('**ERROR: directory {0} to copy content from not found'.format( source_path ))
 		return False		
 
 	#get volume dev name
@@ -110,10 +105,10 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 	#TODO error checking
-	external_volume_device = out
+	external_volume_device = out.decode('utf-8')
 
 	#create mount point
-	mount_point="/tmp/"+external_volume_name+path
+	mount_point="/tmp/"+external_volume_name
 	command = "mkdir -p "+mount_point
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
@@ -123,12 +118,18 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
+	#create path
+	command = "mkdir -p "+mount_point+"/"+dest_path
+	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()	
+
+
 	#recursively copy the content
 	command = "cp -R "+source_path+" "+mount_point+"/"+dest_path
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
 
-	return out
+	return out.decode('utf-8')
 
 def modify_volume_for_external ( volume ):
 	"""
@@ -167,13 +168,13 @@ def modify_volume_for_external ( volume ):
 	container_path = volume['containerPath']							#/var/www/html/config
 	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#var - skip the first / character
 	last_part_of_container_path = container_path[1:].split('/', 1)[1]	#www/html/config....
-	#create a volume named 3tier_nextcloud/apps
-	external_volume_name = host_path+str(uuid.uuid4())
-	create_external_volume( external_volume_name ) #3tier_app_nextcloud_apps
+	#create a volume named nextcloud/apps
+	external_volume_name = host_path.replace('/','_')+'_'+first_part_of_container_path
+	create_external_volume( external_volume_name ) #nextcloud_apps_UUID
 	#create internal directory structure
-	create_path_in_external_volume( external_volume_name, last_part_of_container_path ) #add /www/html/config to volume
+	#create_path_in_external_volume( external_volume_name, "/"+last_part_of_container_path ) #add /www/html/config to volume
 	#copy content from volume[hostPath] to volume
-	copy_content_to_external_volume( external_volume, volume['hostPath'], last_part_of_container_path)
+	copy_content_to_external_volume( external_volume_name, volume['hostPath'], "/"+last_part_of_container_path)
 	#create new volume as a copy of the received
 	new_volume = volume.copy()
 	#modify volume
