@@ -172,8 +172,8 @@ def modify_volume_for_external ( volume ):
 	"""
 	#get firstPartOfHostPath, etc.
 	host_path = volume['hostPath'][2:] 					#nextcloud/apps
-	first_part_of_host_path = host_path.split('/' , 1)[0]	#nextcloud
-	last_part_of_host_path = host_path.split('/' , 1)[1]		#apps...
+	#first_part_of_host_path = host_path.split('/' , 1)[0]	#nextcloud
+	#last_part_of_host_path = host_path.split('/' , 1)[1]		#apps...
 	container_path = volume['containerPath']							#/var/www/html/config
 	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#var - skip the first / character
 	last_part_of_container_path = container_path[1:].split('/', 1)[1]	#www/html/config....
