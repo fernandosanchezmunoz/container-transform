@@ -204,10 +204,8 @@ def modify_group ( group ):
 
 	group_dict = json.loads( group )
 
-	volumes = []
-
 	for app in group_dict['apps']:
-		app['acceptedResourceRoles'] += "*"
+		app['acceptedResourceRoles']="*"
 		for portMapping in app.get('container',{}).get('docker',{}).get('portMappings',{}):
 			if portMapping.get('hostPort',{}): 	#delete ANY hostPort values
 				portMapping['hostPort'] = 0
@@ -236,7 +234,9 @@ if __name__ == "__main__":
 	containers = ""
 	for line in open( args['input'], 'r' ):
 		containers += line.rstrip()
-	#print( create_group( args['name'], containers ) )
+	#detect if it's just one app - if so, get in list
+	if containers[0]=="{":
+		containers="["+containers+"]" 
 	group = create_group( args['name'], containers ) 
 	modified_group = modify_group( group )
 	print( modified_group )
