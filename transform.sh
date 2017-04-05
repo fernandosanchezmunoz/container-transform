@@ -13,7 +13,7 @@ CURRENT_DIR=$PWD
 
 #read example name from first argument
 if [ -z "$1" ]; then
-  echo "** ERROR: no parameter received. Enter the name of the subdirectory on ./examples to convert"
+  echo "** ERROR: no parameter received. Enter the name of the subdirectory on ./data to convert"
   ls -A1l $BASE_DIR | grep ^d | awk '{print $9}'
   exit 1
 fi
