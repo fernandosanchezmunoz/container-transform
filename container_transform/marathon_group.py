@@ -141,7 +141,7 @@ def modify_volume_for_external ( volume ):
 	- copy from local volume (apps,config,data/*) to subdir (/www/html/apps,config,data/)
 	"""
 	#get firstPartOfHostPath, etc.
-	host_path = volume['hostPath'][2:] 					#nextcloud/apps
+	host_path = volume['hostPath'][3:] 					#nextcloud/apps
 	#first_part_of_host_path = host_path.split('/' , 1)[0]	#nextcloud
 	#last_part_of_host_path = host_path.split('/' , 1)[1]		#apps...
 	container_path = volume['containerPath']							#/var/www/html/config
