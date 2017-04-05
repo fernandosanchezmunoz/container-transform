@@ -24,7 +24,7 @@ cd $WORKING_DIR
 container-transform -i compose -o marathon docker-compose.yml > marathon.json 
 echo "***** MARATHON.JSON *****"
 cat marathon.json
-../../container_transform/marathon_group.py -i marathon.json -n ${PWD##*/}-"group"  > group.json
+../../container_transform/marathon_group.py -i marathon.json -n ${PWD##*/}-"group" #produces group.json
 echo "***** GROUP.JSON *****"
 cat group.json
 

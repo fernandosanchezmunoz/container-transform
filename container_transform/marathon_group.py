@@ -193,7 +193,8 @@ if __name__ == "__main__":
 		containers="["+containers+"]" 
 	group = create_group( args['name'], containers ) 
 	modified_group = modify_group( group )
-	print( modified_group )
+	output_file=open( "./group.json", "w")
+	print( modified_group, file=output_file )
 
 	sys.exit(0)
 
