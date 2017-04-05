@@ -184,7 +184,7 @@ def modify_group ( group ):
 	group_dict = json.loads( group )
 
 	for app in group_dict['apps']:
-		app['acceptedResourceRoles']="*"
+		app['acceptedResourceRoles']=["*"]
 		for portMapping in app.get('container',{}).get('docker',{}).get('portMappings',{}):
 			if portMapping.get('hostPort',{}): 	#delete ANY hostPort values
 				portMapping['hostPort'] = 0
