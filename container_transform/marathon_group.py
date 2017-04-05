@@ -9,6 +9,7 @@ import sys
 import argparse
 import subprocess
 import os
+import uuid
 
 def create_group ( name, containers ):
 	"""
@@ -35,7 +36,7 @@ def create_external_volume( external_volume_name ):
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 	#TODO error checking
-	external_volume_device = out
+	external_volume_device = str(out)
 
 	#format the volume
 	command = "mkfs.xfs -f "+external_volume_device
@@ -52,7 +53,7 @@ def create_path_in_external_volume( external_volume_name, path ):
 	command = "rbd ls | grep "+external_volume_name
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
-	if not external_volume_name in out:
+	if not external_volume_name in str(out):
 		print('**ERROR: volume {0} to create path into not found'.format( external_volume_name ))
 		return False
 
@@ -75,7 +76,7 @@ def create_path_in_external_volume( external_volume_name, path ):
 	(out, err) = proc.communicate()	
 
 	#create path
-	command = "mkdir -p "+mount_point+"/"path
+	command = "mkdir -p "+mount_point+"/"+path
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
 
@@ -95,7 +96,7 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	command = "rbd ls | grep "+external_volume_name
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
-	if not external_volume_name in out:
+	if not external_volume_name in str(out):
 		print('**ERROR: volume {0} to copy content into not found'.format( external_volume_name ))
 		return False
 
@@ -167,7 +168,7 @@ def modify_volume_for_external ( volume ):
 	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#var - skip the first / character
 	last_part_of_container_path = container_path[1:].split('/', 1)[1]	#www/html/config....
 	#create a volume named 3tier_nextcloud/apps
-	external_volume_name = group_dict['id']+'_'+host_path 
+	external_volume_name = host_path+str(uuid.uuid4())
 	create_external_volume( external_volume_name ) #3tier_app_nextcloud_apps
 	#create internal directory structure
 	create_path_in_external_volume( external_volume_name, last_part_of_container_path ) #add /www/html/config to volume
