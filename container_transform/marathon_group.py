@@ -76,6 +76,8 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	command = "rbd map "+external_volume_name
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
+	print("**DEBUG: output of rbd map is {}".format(out.decode('utf-8')))
+
 	#TODO error checking
 	external_volume_device = out.decode('utf-8')
 	print("**DEBUG: external_volume_device {}".format(external_volume_device))
@@ -85,6 +87,7 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
 	print("**DEBUG: mount_point {}".format(mount_point))
+
 	#mount the volume
 	command = "mount "+external_volume_device+" "+mount_point
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
@@ -95,9 +98,13 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	#proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	#(out, err) = proc.communicate()	
 
-
 	#recursively copy the content
 	command = "cp -R "+source_path+" "+mount_point
+	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()
+
+	#umount the volume
+	command = "umount "+external_volume_device
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
 
@@ -148,9 +155,9 @@ def modify_volume_for_external ( volume ):
 	#copy content from volume[hostPath] to volume
 	copy_content_to_external_volume( external_volume_name, volume['hostPath'], "/"+last_part_of_container_path)
 	#create new volume as a copy of the received
-	new_volume = volume.copy()
+	#new_volume = volume.copy()
 	#modify volume
-	new_volume['external'] = { 						#mount it as external volume
+	volume['external'] = { 						#mount it as external volume
 		'name': volume['hostPath'][1:],			#remove leading .
 		'provider': 'dvdi',
 		'options': { 
@@ -158,10 +165,10 @@ def modify_volume_for_external ( volume ):
 		}
 	}
 	#change containerPath to the firstPiece only
-	new_volume['containerPath'] = first_part_of_container_path	#var		
-	del( new_volume['hostPath'] )							#external volumes do not use hostpath
+	volume['containerPath'] = first_part_of_container_path	#var		
+	del( volume['hostPath'] )							#external volumes do not use hostpath
 
-	return new_volume
+	return volume
 
 def modify_group ( group ):
 	"""
