@@ -99,7 +99,7 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	#(out, err) = proc.communicate()	
 
 	#recursively copy the content
-	command = "cp -R "+source_path+" "+mount_point
+	command = "cp -R "+source_path+"/ "+mount_point
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
@@ -118,28 +118,7 @@ def modify_volume_for_external ( volume ):
 	Modifies the volume to use the newly create external volume.
 	Returns the new volume dictionary.
 	"""
-	"""
-	EXAMPLE: receive as a standard container
-	"volumes": [
-		{
-			"containerPath": "/var/www/html/apps",
-			"hostPath": "./nextcloud/apps",
-			"mode": "RW"
-		},
-		{
-			"containerPath": "/var/www/html/config",
-			"hostPath": "./nextcloud/config",
-			"mode": "RW"
-		}
-	]
-	would give us
-	- create a volume named group_app_hostPath (3tier_app_nextcloud_apps)
-	- mount it with containerPath = firstPartOfContainerPath (var)
-	- get the lastPieceOfContainerPath (/www/html/apps, /www/html/config, /www/html/data)
-	- create subdir in the volume lastPieceOfContainerPath
-	- get the lastPartOfHostPath (apps, config, data)
-	- copy from local volume (apps,config,data/*) to subdir (/www/html/apps,config,data/)
-	"""
+
 	#get firstPartOfHostPath, etc.
 	host_path = volume['hostPath'][2:] 					#app
 	#first_part_of_host_path = host_path.split('/' , 1)[0]	#app
@@ -150,12 +129,8 @@ def modify_volume_for_external ( volume ):
 	#create a volume 
 	external_volume_name = host_path.replace('/','_')
 	create_external_volume( external_volume_name ) #nextcloud_apps_UUID
-	#create internal directory structure
-	#create_path_in_external_volume( external_volume_name, "/"+last_part_of_container_path ) #add /www/html/config to volume
 	#copy content from volume[hostPath] to volume
 	copy_content_to_external_volume( external_volume_name, volume['hostPath'], "/"+last_part_of_container_path)
-	#create new volume as a copy of the received
-	#new_volume = volume.copy()
 	#modify volume
 	volume['external'] = { 						#mount it as external volume
 		'name': host_path,
