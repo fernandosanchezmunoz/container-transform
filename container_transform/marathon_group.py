@@ -32,7 +32,7 @@ def create_external_volume( external_volume_name ):
 	command = "rbd ls | grep "+external_volume_name
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
-	if not external_volume_name in out.decode('utf-8'):
+	if external_volume_name in out.decode('utf-8'):
 		print('**INFO: volume {0} already exists'.format( external_volume_name ))
 		return out.decode('utf-8')
 
