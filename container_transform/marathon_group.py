@@ -118,10 +118,10 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	command = "mkdir -p "+mount_point
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
-	print("**DEBUG: mount_point {}".format(mount_point))
+	print("**DEBUG: mount_point {}".format(mount_point)).replace( '/n', ' ')
 
 	#mount the volume
-	command = ( "mount "+external_volume_device+" "+ ).replace( '/n', ' ')
+	command = ("mount "+external_volume_device+" "+mount_point)
 	print("**DEBUG: MOUNT COMMAND {}".format(command))
 
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
