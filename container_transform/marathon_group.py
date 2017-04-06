@@ -72,7 +72,7 @@ def create_external_volume( external_volume_name ):
 
 	return out.decode('utf-8')
 
-def	copy_content_to_external_volume( external_volume_name, source_path, dest_path, mount_path ):
+def	copy_content_to_external_volume( external_volume_name, source_path, mount_path, dest_path ):
 	"""
 	Copy recursively the content in localhost under "path" to the external volume.
 	Assumes the path exists. Assumes the external_volume exists.
@@ -131,9 +131,9 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	print("**DEBUG: MOUNT command result {}".format(out.decode('utf-8')))
 
 	#create path
-	command = "mkdir -p "+mount_point+"/"+dest_path
-	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()	
+	#command = "mkdir -p "+mount_point+"/"+dest_path
+	#proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
+	#(out, err) = proc.communicate()	
 
 	#create mount path
 	print("**DEBUG: MOUNT path to be created result {}".format(mount_point+"/"+mount_path))
@@ -142,7 +142,9 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	(out, err) = proc.communicate()	
 
 	#recursively copy the content
-	command = "cp -R "+source_path+" "+mount_point+mount_path+dest_path
+	print("**DEBUG: COPY from {0} to {1}".format(mount_point+source_path, mount_point+mount_path+dest_path))
+
+	command = "cp -R "+mount_point+source_path+" "+mount_point+mount_path+dest_path
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
