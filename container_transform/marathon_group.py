@@ -41,12 +41,22 @@ def create_external_volume( external_volume_name ):
 		proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 		(out, err) = proc.communicate()
 
-	#get volume dev name
-	command = "rbd map "+external_volume_name
+	#check whether the volume is already mapped
+	command = "rbd showmapped | grep "+external_volume_name
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()
-	#TODO error checking
-	external_volume_device = out.decode('utf-8')
+	(out, err) = proc.communicate()	
+
+	if external_volume_name in out.decode('utf-8'):
+		print('**INFO: volume {0} already mapped to {1}'.format( external_volume_name, out.decode('utf-8')  ))
+	else:
+		#if not, map it
+		command = "rbd map "+external_volume_name
+		proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
+		(out, err) = proc.communicate()
+		#TODO error checking
+		external_volume_device = out.decode('utf-8')		
+
+	print("**DEBUG: external_volume_MAPPING {}".format(out.decode('utf-8')))
 
 	#format the volume
 	command = "mkfs.xfs -f "+external_volume_device
@@ -73,11 +83,20 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 		print('**ERROR: directory {0} to copy content from not found'.format( source_path ))
 		return False		
 
-	#get volume dev name
-	command = "rbd map "+external_volume_name
+	#check whether the volume is already mapped
+	command = "rbd showmapped | grep "+external_volume_name
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()
-	#print("**DEBUG: output of rbd map is {}".format(out.decode('utf-8')))
+	(out, err) = proc.communicate()	
+	
+	if external_volume_name in out.decode('utf-8'):
+		print('**INFO: volume {0} already mapped to {1}'.format( external_volume_name, out.decode('utf-8')  ))
+	else:
+		#if not, map it
+		command = "rbd map "+external_volume_name
+		proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
+		(out, err) = proc.communicate()
+		#TODO error checking
+		external_volume_device = out.decode('utf-8')
 
 	#TODO error checking
 	external_volume_device = out.decode('utf-8')
