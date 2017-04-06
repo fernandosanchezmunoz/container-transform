@@ -91,7 +91,7 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 
 	if external_volume_name in out.decode('utf-8'):
 		output_list=out.decode('utf-8').split()
-		print('**DEBUG: output list {}'.format(output_list.split(' ')))
+		print('**DEBUG: output list {}'.format(output_list))
 		external_volume_device=output_list[-1]
 		print('**INFO: volume {0} already mapped to {1}'.format( external_volume_name, external_volume_device  ))
 	else:
