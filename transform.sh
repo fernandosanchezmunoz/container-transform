@@ -10,6 +10,14 @@ APP_NAME="$1"
 BASE_DIR="./data/"
 WORKING_DIR=$BASE_DIR$APP_NAME
 CURRENT_DIR=$PWD
+COMMAND_PIP_CHECK=$(pip list --format columns|grep container-transform)
+
+#pre-requisites: container-transform
+if [[ $COMMAND_PIP_CHECK == *"container-transform"* ]]; then
+	echo('**INFO: CTransform installed OK')
+else
+	pip install container-transform
+fi
 
 #read example name from first argument
 if [ -z "$1" ]; then
