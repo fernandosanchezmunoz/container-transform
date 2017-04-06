@@ -29,16 +29,17 @@ def create_external_volume( external_volume_name ):
 	"""
 
 	#check that the volume exists
-	command = "rbd ls | grep "+external_volume_name
+	#command = "rbd ls | grep "+external_volume_name
+	command = "docker volume ls | grep "+external_volume_name
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
 	if external_volume_name in out.decode('utf-8'):
 		print('**INFO: volume {0} already exists'.format( external_volume_name ))
 		return out.decode('utf-8')
-
-	command = "docker volume create --driver=rexray --name="+external_volume_name
-	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()
+	else:
+		command = "docker volume create --driver=rexray --name="+external_volume_name
+		proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
+		(out, err) = proc.communicate()
 
 	#get volume dev name
 	command = "rbd map "+external_volume_name
