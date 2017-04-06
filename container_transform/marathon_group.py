@@ -178,7 +178,7 @@ def modify_volume_for_external ( volume, app_name ):
 	external_volume_name = app_name+'-'+host_path.replace('/','_')
 	create_external_volume( external_volume_name ) #nextcloud_apps_UUID
 	#copy content from volume[hostPath] to volume
-	copy_content_to_external_volume( external_volume_name, volume['hostPath'], volume['containerPath'])
+	copy_content_to_external_volume( external_volume_name, volume['hostPath'], last_part_of_container_path)
 	#modify volume
 	volume['external'] = { 						#mount it as external volume
 		'name': external_volume_name,
