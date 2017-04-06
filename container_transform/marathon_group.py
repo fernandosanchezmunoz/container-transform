@@ -185,7 +185,7 @@ def modify_volume_for_external ( volume, app_name ):
 	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#src
 	last_part_of_container_path = container_path[1:].split('/', 1)[1]	#app
 	#create a volume 
-	external_volume_name = app_name+'-'+host_path.replace('/','_')
+	external_volume_name = app_name+'-'+host_path[2:].replace('/','_')
 	create_external_volume( external_volume_name ) #nextcloud_apps_UUID
 	#copy content from volume[hostPath] to volume
 	copy_content_to_external_volume( external_volume_name, host_path, \
