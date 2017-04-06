@@ -47,7 +47,8 @@ def create_external_volume( external_volume_name ):
 	(out, err) = proc.communicate()	
 
 	if external_volume_name in out.decode('utf-8'):
-		print('**INFO: volume {0} already mapped to {1}'.format( external_volume_name, out.decode('utf-8')  ))
+		external_volume_device=out.decode('utf-8').split(' ')[-1]
+		print('**INFO: volume {0} already mapped to {1}'.format( external_volume_name, external_volume_device  ))
 	else:
 		#if not, map it
 		command = "rbd map "+external_volume_name
@@ -89,7 +90,8 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	(out, err) = proc.communicate()	
 
 	if external_volume_name in out.decode('utf-8'):
-		print('**INFO: volume {0} already mapped to {1}'.format( external_volume_name, out.decode('utf-8')  ))
+		external_volume_device=out.decode('utf-8').split(' ')[-1]
+		print('**INFO: volume {0} already mapped to {1}'.format( external_volume_name, external_volume_device  ))
 	else:
 		#if not, map it
 		print('**INFO: mapping volume {0} for copy'.format( external_volume_name, out.decode('utf-8')  ))		
@@ -100,8 +102,7 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 		external_volume_device = out.decode('utf-8')
 
 	#TODO error checking
-	external_volume_device = out.decode('utf-8')
-	print('**INFO: volume {0} mapped to {1} for copy'.format( external_volume_name, out.decode('utf-8')  ))
+	print('**INFO: volume {0} mapped to {1} for copy'.format( external_volume_name, external_volume_device ))
 
 	#print("**DEBUG: external_volume_device {}".format(external_volume_device))
 	#create mount point
