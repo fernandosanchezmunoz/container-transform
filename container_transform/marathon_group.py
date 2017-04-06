@@ -87,11 +87,12 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	command = "rbd showmapped | grep "+external_volume_name
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
-	
+
 	if external_volume_name in out.decode('utf-8'):
 		print('**INFO: volume {0} already mapped to {1}'.format( external_volume_name, out.decode('utf-8')  ))
 	else:
 		#if not, map it
+		print('**INFO: mapping volume {0} for copy'.format( external_volume_name, out.decode('utf-8')  ))		
 		command = "rbd map "+external_volume_name
 		proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 		(out, err) = proc.communicate()
@@ -100,18 +101,23 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 
 	#TODO error checking
 	external_volume_device = out.decode('utf-8')
+	print('**INFO: volume {0} mapped to {1} for copy'.format( external_volume_name, out.decode('utf-8')  ))
+
 	#print("**DEBUG: external_volume_device {}".format(external_volume_device))
 	#create mount point
 	mount_point="/tmp/"+external_volume_name
 	command = "mkdir -p "+mount_point
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
-	#print("**DEBUG: mount_point {}".format(mount_point))
+	print("**DEBUG: mount_point {}".format(mount_point))
 
 	#mount the volume
-	command = "mount "+external_volume_device+" "+mount_point
+	command = "mount --source "+external_volume_device+" --target "+mount_point
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
+
+	print("**DEBUG: MOUNT command result {}".format(out.decode('utf-8')))
+
 
 	#create path
 	#command = "mkdir -p "+mount_point+"/"+dest_path
