@@ -108,9 +108,15 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
 
+	#unmap rbd
+	command = "rbd unmap "+external_volume_name
+	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()
+	#print("**DEBUG: output of rbd map is {}".format(out.decode('utf-8')))
+
 	return out.decode('utf-8')
 
-def modify_volume_for_external ( volume ):
+def modify_volume_for_external ( volume, app_name ):
 	"""
 	Receives a Marathon volume definition as a dictionary that includes a local directory to load.
 	Creates an external persistent volume in a docker external volume (assumed to be mounted).
@@ -127,7 +133,7 @@ def modify_volume_for_external ( volume ):
 	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#src
 	last_part_of_container_path = container_path[1:].split('/', 1)[1]	#app
 	#create a volume 
-	external_volume_name = host_path.replace('/','_')
+	external_volume_name = app_name+'_'+host_path.replace('/','_')
 	create_external_volume( external_volume_name ) #nextcloud_apps_UUID
 	#copy content from volume[hostPath] to volume
 	copy_content_to_external_volume( external_volume_name, volume['hostPath'], "/"+last_part_of_container_path)
@@ -170,7 +176,7 @@ def modify_group ( group ):
 		#modify all volumes in the groups apps so that "this directory" volumes become external
 		for volume in app.get('container', {}).get('volumes', {}):
 			if volume['hostPath'][:2] == "./":				#if the volume is "this dir" for compose
-				volume = modify_volume_for_external( volume )
+				volume = modify_volume_for_external( volume, app['id'] )
 
 	return json.dumps( group_dict )
 
