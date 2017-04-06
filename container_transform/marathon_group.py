@@ -144,6 +144,12 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	(out, err) = proc.communicate()
 	#print("**DEBUG: output of rbd map is {}".format(out.decode('utf-8')))
 
+	#delete temp mount point
+	command = "rmdir "+mount_point
+	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()		
+	print("**DEBUG: remove mount point (should be empty) {}".format(mount_point))
+
 	return out.decode('utf-8')
 
 def modify_volume_for_external ( volume, app_name ):
