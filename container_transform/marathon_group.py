@@ -140,7 +140,7 @@ def modify_volume_for_external ( volume, app_name ):
 	copy_content_to_external_volume( external_volume_name, volume['hostPath'], "/"+last_part_of_container_path)
 	#modify volume
 	volume['external'] = { 						#mount it as external volume
-		'name': host_path,
+		'name': external_volume_name,
 		'provider': 'dvdi',
 		'options': { 
 		'dvdi/driver': 'rexray'
