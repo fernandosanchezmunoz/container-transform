@@ -211,8 +211,9 @@ def modify_group ( group ):
 					app['labels'] = { "HAPROXY_GROUP": "external" }
 		#modify all volumes in the groups apps so that "this directory" volumes become external
 		for volume in app.get('container', {}).get('volumes', {}):
-			if volume['hostPath'][:2] == "./":				#if the volume is "this dir" for compose
-				volume = modify_volume_for_external( volume, app['id'] )
+			if volume['hostPath'][:2] == "./":								#if the volume is "this dir" for compose
+				volume = modify_volume_for_external( volume, group_dict['id']+'-'+app['id'] )	
+						#modify it so that the local files are reachable via external
 
 	return json.dumps( group_dict )
 
