@@ -113,7 +113,7 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	print("**DEBUG: mount_point {}".format(mount_point))
 
 	#mount the volume
-	command = "mount --source "+external_volume_device+" --target "+mount_point
+	command = "mount "+external_volume_device+" "+mount_point
 	print("**DEBUG: MOUNT COMMAND {}".format(command))
 
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
