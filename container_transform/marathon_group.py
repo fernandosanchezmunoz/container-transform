@@ -141,7 +141,7 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	(out, err) = proc.communicate()
 
 	#create mount path
-	print("**DEBUG: MOUNT path to be created result {}".format(mount_point+"/"+mount_path)))
+	print("**DEBUG: MOUNT path to be created result {}".format(mount_point+"/"+mount_path))
 	command = "mkdir -p "+mount_point+"/"+mount_path
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
