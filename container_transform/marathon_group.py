@@ -116,7 +116,7 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	#create mount point
 	mount_point="/tmp/"+external_volume_name
 	command = "mkdir -p "+mount_point
-	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
+	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
 	print("**DEBUG: mount_point {}".format(mount_point))
 
@@ -124,7 +124,7 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 	command = "mount "+external_volume_device+" "+mount_point
 	print("**DEBUG: MOUNT COMMAND {}".format(command))
 
-	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
+	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
 	print("**DEBUG: MOUNT command result {}".format(out.decode('utf-8')))
@@ -136,7 +136,7 @@ def	copy_content_to_external_volume( external_volume_name, source_path, dest_pat
 
 	#recursively copy the content
 	command = "cp -R "+source_path+"/ "+mount_point
-	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
+	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
 	#umount the volume
