@@ -64,6 +64,12 @@ def create_external_volume( external_volume_name ):
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
+	#unmap rbd
+	command = "rbd unmap "+external_volume_name
+	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()
+	#print("**DEBUG: output of rbd map is {}".format(out.decode('utf-8')))
+
 	return out.decode('utf-8')
 
 def	copy_content_to_external_volume( external_volume_name, source_path, dest_path ):
