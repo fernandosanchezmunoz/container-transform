@@ -14,7 +14,7 @@ COMMAND_PIP_CHECK=$(pip list --format columns|grep container-transform)
 
 #pre-requisites: container-transform
 if [[ $COMMAND_PIP_CHECK == *"container-transform"* ]]; then
-	echo('**INFO: CTransform installed OK')
+	echo "**INFO: CTransform installed OK"
 else
 	pip install container-transform
 fi
