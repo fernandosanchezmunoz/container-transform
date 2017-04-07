@@ -146,7 +146,7 @@ def	copy_content_to_external_volume( external_volume_name, source_path, mount_pa
 	print("**DEBUG: COPY from {0} to {1}".format(source_path, mount_point+"/"+mount_path+"/"+dest_path))
 
 	#copy source to src_path
-	command = "cp -R "+source_path+" "+mount_point+"/"+src_path
+	command = "cp -R "+source_path+" "+mount_point+"/"+source_path
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
