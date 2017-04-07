@@ -226,12 +226,16 @@ def modify_group ( group ):
 	for app in group_dict['apps']:
 		app['acceptedResourceRoles']=["*"]
 		for portMapping in app.get('container',{}).get('docker',{}).get('portMappings',{}):
-			if portMapping.get('hostPort',{}): 	#delete ANY hostPort values
+			if portMapping.get('hostPort',{}): 	#delete ANY hostPort values, use them for VIP
+				#create a VIP for every app, with a known pattern: group_dict['id']+'-'+app['id']:hostPort
+				vip = "/"+group_dict['id']+'-'+app['id']+":"+portMapping['hostPort']
+				portMapping['labels'] = { "VIP_0": vip }
 				portMapping['hostPort'] = 0
 				if 'labels' in app:
 					app['labels'].update( {"HAPROXY_GROUP": "external"} )# if there was a hostPort add to MLB
 				else:
 					app['labels'] = { "HAPROXY_GROUP": "external" }
+
 		#modify all volumes in the groups apps so that "this directory" volumes become external
 		for volume in app.get('container', {}).get('volumes', {}):
 			if volume['hostPath'][:2] == "./":								#if the volume is "this dir" for compose
