@@ -265,6 +265,6 @@ if __name__ == "__main__":
 	modified_group = modify_group( group )
 	output_file=open( "./group.json", "w")
 	print( modified_group, file=output_file )
-
+	input( "***DEBUG: Press ENTER to continue...")
 	sys.exit(0)
 
