@@ -231,6 +231,7 @@ def modify_group ( group ):
 				vip = "/"+group_dict['id']+'-'+app['id']+":"+portMapping['hostPort']
 				portMapping['labels'] = { "VIP_0": vip }
 				portMapping['hostPort'] = 0
+				#make the app available in MarathonLB
 				if 'labels' in app:
 					app['labels'].update( {"HAPROXY_GROUP": "external"} )# if there was a hostPort add to MLB
 				else:
