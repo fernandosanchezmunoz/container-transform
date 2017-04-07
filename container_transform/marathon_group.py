@@ -150,10 +150,10 @@ def	copy_content_to_external_volume( external_volume_name, source_path, mount_pa
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
-	#copy source to mount_path
-	command = "cp -R "+source_path+" "+mount_point+"/"+mount_path
-	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()
+	#copy source to mount_path - not needed, just need to CREATE mount_path
+	#command = "cp -R "+source_path+" "+mount_point+"/"+mount_path
+	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	#(out, err) = proc.communicate()
 
 	#umount the volume
 	command = "umount "+external_volume_device
