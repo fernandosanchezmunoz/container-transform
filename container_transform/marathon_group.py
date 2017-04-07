@@ -145,7 +145,7 @@ def	copy_content_to_external_volume( external_volume_name, source_path, mount_pa
 	#recursively copy the content
 	print("**DEBUG: COPY from {0} to {1}".format(mount_point+source_path[1:], mount_point+"/"+mount_path+"/"+dest_path))
 
-	command = "cp -R "+mount_point+source_path[1:]+" "+mount_point+"/"+mount_path+"/"+dest_path
+	command = "cp -R "+mount_point+source_path[1:]+" "+mount_point+"/"+dest_path
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
@@ -189,7 +189,7 @@ def modify_volume_for_external ( volume, app_name ):
 	create_external_volume( external_volume_name ) #nextcloud_apps_UUID
 	#copy content from volume[hostPath] to volume
 	copy_content_to_external_volume( external_volume_name, host_path, \
-		last_part_of_container_path, first_part_of_container_path)
+		first_part_of_container_path, last_part_of_container_path )
 	#modify volume
 	volume['external'] = { 						#mount it as external volume
 		'name': external_volume_name,
