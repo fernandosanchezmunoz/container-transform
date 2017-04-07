@@ -143,7 +143,7 @@ def	copy_content_to_external_volume( external_volume_name, source_path, mount_pa
 	(out, err) = proc.communicate()	
 
 	#recursively copy the content
-	print("**DEBUG: COPY from {0} to {1}".format(mount_point+source_path[1:], mount_point+mount_path+dest_path))
+	print("**DEBUG: COPY from {0} to {1}".format(mount_point+source_path[1:], mount_point+"/"+mount_path+"/"+dest_path))
 
 	command = "cp -R "+mount_point+source_path[1:]+" "+mount_point+"/"+mount_path+"/"+dest_path
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
