@@ -143,7 +143,7 @@ def	copy_content_to_external_volume( external_volume_name, source_path, mount_pa
 	(out, err) = proc.communicate()	
 
 	#recursively copy the content
-	print("**DEBUG: COPY from {0} to {1}".format(source_path, mount_point+"/"+mount_path+"/"+dest_path))
+	print("**DEBUG: COPY from {0} to {1}".format(source_path, mount_point+"/"+dest_path))
 
 	#copy source to src_path
 	command = "cp -R "+source_path+" "+mount_point+"/"+source_path
