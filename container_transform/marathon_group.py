@@ -158,6 +158,13 @@ def	copy_content_to_external_volume( external_volume_name, source_path, mount_pa
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
+	data_dir="data"
+	print("**DEBUG: mkdir {0} ".format(source_path, mount_point+"/"+mount_path+"/"+source_path[2:]+"/"data_dir))
+	#mkdir "/data"
+	command = "mkdir "+mount_point+"/"+mount_path+"/"+source_path[2:]+"/"data_dir
+	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()
+
 	#copy source to mount_path - not needed, just need to CREATE mount_path
 	#command = "cp -R "+source_path+" "+mount_point+"/"+mount_path
 	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
