@@ -249,10 +249,11 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	#staging_dir = staging_mount_point+"/"+container_path[1:]+"/"
 	if os.path.isdir(os.getcwd()+host_path):
 		container_dir = container_path
-		print("**DEBUG: is dir: {0}".format(os.path.basename(container_dir)) ) #remove leading slash
+		host_dir = host_path
+		print("**DEBUG: is dir: {0}".format(os.getcwd()+host_path) ) #remove leading slash
 	else:
 		container_dir = os.path.dirname(container_path)
-		print("**DEBUG: is file: {0} and dirname is {1}".format(container_path, container_dir) ) #remove leading slash		
+		print("**DEBUG: is file: {0} and container dirname will be {1}".format(host_path, container_dir) ) #remove leading slash		
 
 	staging_app_dir =staging_mount_point+"/"+app_name # /tmp/ctransform/nginx-php-group-web
 	staging_dir = staging_app_dir+container_dir #/tmp/ctransform/nginx-php-group-web/etc/nginx/conf.d
