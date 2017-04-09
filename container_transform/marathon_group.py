@@ -279,7 +279,7 @@ def modify_volume_for_uri( volume, app_name, app_server_address ):
 	#create subdir for with containerpath
 	staging_dir = staging_mount_point+container_path[1:]+"/"
 	print("**DEBUG: Create staging dir {0}".format(staging_dir) ) #remove leading slash
-	command = "mkdir -p "+staging_dir[1:]
+	command = "mkdir -p "+staging_dir
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
 
