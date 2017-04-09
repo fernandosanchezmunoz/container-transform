@@ -259,7 +259,37 @@ def modify_volume_for_external ( volume, app_name ):
 
 	return volume
 
-def modify_group ( group ):
+def modify_volume_for_uri( volume, source_path, app_server_address ):
+	"""
+	Compress and copy the application in "source_path". Upload it to "app_server_address" so that it can be downloaded as URI.
+	"""
+
+	#get firstPartOfHostPath, etc.
+	host_path = volume['hostPath'] 					#./app
+	#first_part_of_host_path = host_path.split('/' , 1)[0]	#app
+	#last_part_of_host_path = host_path.split('/' , 1)[1]		#NULL
+	container_path = volume['containerPath']							#/src/app
+	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#src
+	last_part_of_container_path = container_path[1:].split('/', 1)[1]	#app
+
+	#create an artifact 
+	artifact_name = app_name+'-'+host_path[2:].replace('/','_')+".tgz"
+	#compress app to artifact
+	print("**DEBUG: Compress {0} into {1}".format(host_path, artifact_name))
+	command = "tar -zcvf "+artifact_name+" ." #compress this directory
+	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()
+
+	#TODO: put artifact in web server
+	web_server_location="/root/DCOS_install/genconf/serve"
+	print("**DEBUG: mv {0} into {1}".format(artifact_name, web_server_location))
+	command = "mv "+artifact_name+" "+web_server_location
+	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()
+
+	return artifact_name
+
+def modify_group ( group, app_server_address ):
 	"""
 	Modifies a marathon group received as a printable string to adapt the apps inside it 
 	to the desired parameters.
@@ -286,11 +316,18 @@ def modify_group ( group ):
 				else:
 					app['labels'] = { "HAPROXY_GROUP": "external" }
 
-		#modify all volumes in the groups apps so that "this directory" volumes become external
+		#modify all volumes in the groups apps so that "this directory" volumes become external or downloaded from URI
 		for volume in app.get('container', {}).get('volumes', {}):
 			if volume['hostPath'][:2] == "./":			#if the volume is "this dir" for compose
-				volume = modify_volume_for_external( volume, group_dict['id']+'-'+app['id'] )	
+				#volume = modify_volume_for_external( volume, group_dict['id']+'-'+app['id'] )	
 						#modify it so that the local files are reachable via external volume
+				artifact_name = modify_volume_for_uri( volume, group_dict['id']+'-'+app['id'], app_server_address )
+				uri = app_server_address+"/"+artifact_name
+				if 'uris' in app:
+					app['uris'].append( uri )
+				else:
+					app['uris'] = [ uri ]
+				#artifact will be downloaded to /mnt/mesos/sandbox
 
 	return json.dumps( group_dict )
 
@@ -301,7 +338,8 @@ if __name__ == "__main__":
 		usage='marathon_group.py -i [container_list_filename] -n [group_name]'
 		)
 	parser.add_argument('-i', '--input', help='name of the file including the list of containers', required=True)
-	parser.add_argument('-n', '--name', help='name to be given to the Marathon Service Group', required=True)	
+	parser.add_argument('-n', '--name', help='name to be given to the Marathon Service Group', required=True)
+	parser.add_argument('-s', '--server', help='address of the app server to be used for artifacts', required=false)		
 	args = vars( parser.parse_args() )
 
 	#remove the trailing \n from file
@@ -312,7 +350,7 @@ if __name__ == "__main__":
 	if containers[0]=="{":
 		containers="["+containers+"]" 
 	group = create_group( args['name'], containers ) 
-	modified_group = modify_group( group )
+	modified_group = modify_group( group, args['server'] )
 	output_file=open( "./group.json", "w")
 	print( modified_group, file=output_file )
 	input( "***DEBUG: Press ENTER to continue...")
