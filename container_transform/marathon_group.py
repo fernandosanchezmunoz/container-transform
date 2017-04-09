@@ -198,6 +198,11 @@ def	copy_content_to_external_volume( external_volume_name, source_path, mount_pa
 	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	#(out, err) = proc.communicate()
 
+	#sync
+	command = "sync"
+	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()
+
 	#umount the volume
 	command = "umount "+external_volume_device
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
