@@ -230,15 +230,17 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	"""
 
 	#get firstPartOfHostPath, etc.
-	host_path = volume['hostPath'] 					#./app
+	host_path = volume['hostPath'] 					#./app , ./site.conf
+	host_path_to_create = ""
 	#first_part_of_host_path = host_path.split('/' , 1)[0]	#app
 	#last_part_of_host_path = host_path.split('/' , 1)[1]		#NULL
-	container_path = volume['containerPath']							#/src/app
-	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#src
+	container_path = volume['containerPath']							#/src/app, "/etc/nginx/conf.d/site.conf",
+	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#src  etc
 	if len(container_path[1:].split('/', 1)) > 1:
-	  last_part_of_container_path = container_path[1:].split('/', 1)[1]	#app
+	  last_part_of_container_path = container_path[1:].split('/', 1)[1]	#app  
 	else:
 	  last_part_of_container_path = ""
+
 	staging_mount_point = "/tmp/ctransform"
 
 	#create an artifact 
@@ -246,7 +248,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 
 	#create subdir for staging with containerpath
 	#staging_dir = staging_mount_point+"/"+container_path[1:]+"/"
-	staging_dir = staging_mount_point+"/"+app_name
+	staging_dir = staging_mount_point+"/"+app_name+os.path.basename(container_path)[1:]	#/tmp/ctransform/nginx-php/etc/nginx/conf.d
 	print("**DEBUG: Create staging dir {0}".format(staging_dir) ) #remove leading slash
 	command = "sudo mkdir -p "+staging_dir
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
