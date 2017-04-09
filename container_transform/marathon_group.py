@@ -271,13 +271,13 @@ def modify_volume_for_uri( volume, app_name, app_server_address ):
 	container_path = volume['containerPath']							#/src/app
 	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#src
 	last_part_of_container_path = container_path[1:].split('/', 1)[1]	#app
-	staging_mount_point = "/tmp/ctransform/"
+	staging_mount_point = "/tmp/ctransform"
 
 	#create an artifact 
 	artifact_name = app_name+'-'+host_path[2:].replace('/','_')+".tgz"
 
 	#create subdir for with containerpath
-	staging_dir = staging_mount_point+container_path[1:]+"/"
+	staging_dir = staging_mount_point+"/"+container_path[1:]+"/"
 	print("**DEBUG: Create staging dir {0}".format(staging_dir) ) #remove leading slash
 	command = "sudo mkdir -p "+staging_dir
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
