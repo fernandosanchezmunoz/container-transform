@@ -250,7 +250,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	#staging_dir = staging_mount_point+"/"+container_path[1:]+"/"
 	if os.path.isdir(os.getcwd()+container_path):
 		container_dir = container_path
-		print("**DEBUG: is dir: {0}".format(os.path.basename(container_basename)) ) #remove leading slash
+		print("**DEBUG: is dir: {0}".format(os.path.basename(container_dir)) ) #remove leading slash
 	else:
 		container_dir = os.path.dirname(container_path)
 		print("**DEBUG: is file: {0} and dirname is {1}".format(container_path, container_dir) ) #remove leading slash		
