@@ -248,8 +248,14 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 
 	#create subdir for staging with containerpath
 	#staging_dir = staging_mount_point+"/"+container_path[1:]+"/"
-	print("**DEBUG: basename container_path is  {0}".format(os.path.basename(container_path)) ) #remove leading slash
-	staging_dir = staging_mount_point+"/"+app_name+"/"+os.path.basename(container_path)	#/tmp/ctransform/nginx-php/etc/nginx/conf.d
+	if os.path.isdir(container_path):
+		container_basename = container_path
+		print("**DEBUG: is dir: {0}".format(os.path.basename(container_basename)) ) #remove leading slash
+	else:
+		container_basename = os.path.basename(container_path)
+		print("**DEBUG: is file: {0} and basename is {1}".format(container_path, container_basename) ) #remove leading slash		
+
+	staging_dir = staging_mount_point+"/"+app_name+"/"+container_basename #/tmp/ctransform/nginx-php/etc/nginx/conf.d
 	print("**DEBUG: Create staging dir {0}".format(staging_dir) ) #remove leading slash
 	command = "sudo mkdir -p "+staging_dir
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
