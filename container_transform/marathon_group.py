@@ -272,10 +272,10 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	(out, err) = proc.communicate()
 
 	#remove staging_dir 
-	print("**DEBUG: Remove {0}".format(staging_dir))
-	command = "rm -Rf "+staging_dir 
-	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()
+	#print("**DEBUG: Remove {0}".format(staging_dir))
+	#command = "rm -Rf "+staging_dir 
+	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	#(out, err) = proc.communicate()
 
 	return artifact_name
 
