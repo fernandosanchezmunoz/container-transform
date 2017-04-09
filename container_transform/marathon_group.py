@@ -270,7 +270,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 
 	#compress staging_dir to artifact
 	print("**DEBUG: Compress {0} into {1} with relative path {2}".format(staging_app_dir, artifact_name,staging_app_dir ))
-	command = "tar -v -C "+staging_mount_point+" -cvzf "+artifact_name+" "+host_path #compress this directory
+	command = "tar -v -C "+staging_app_dir+" -cvzf "+artifact_name+" "+staging_app_dir #compress this directory
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
@@ -282,8 +282,8 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	(out, err) = proc.communicate()
 
 	#remove staging_dir 
-	print("**DEBUG: Remove {0}".format(staging_dir))
-	command = "rm -Rf "+staging_dir 
+	print("**DEBUG: Remove {0}".format(staging_app_dir))
+	command = "rm -Rf "+staging_app_dir 
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
