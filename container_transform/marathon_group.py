@@ -328,6 +328,8 @@ def modify_group ( group, app_server_address ):
 				else:
 					app['uris'] = [ uri ]
 				#artifact will be downloaded to /mnt/mesos/sandbox
+				#remove the volume
+				del( volume )
 
 	return json.dumps( group_dict )
 
