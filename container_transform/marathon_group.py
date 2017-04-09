@@ -254,7 +254,7 @@ def modify_volume_for_external ( volume, app_name ):
 		}
 	}
 	#change containerPath to the firstPiece only
-	volume['containerPath'] = "/"+first_part_of_container_path	#absolute /src in container, not "src" which would be /mnt/mesos/sandbox/src	
+	volume['containerPath'] = first_part_of_container_path	#without "/": /mnt/mesos/sandbox/src instead of /src in container
 	del( volume['hostPath'] )							#external volumes do not use hostpath
 
 	return volume
