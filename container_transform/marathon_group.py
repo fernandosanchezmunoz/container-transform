@@ -201,7 +201,7 @@ def modify_volume_for_external ( volume, app_name ):
 	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#src
 	if len(container_path[1:].split('/', 1)) > 1:
 	  last_part_of_container_path = container_path[1:].split('/', 1)[1]	#app
-	else
+	else:
 	  last_part_of_container_path = ""
 	#create a volume 
 	external_volume_name = app_name+'-'+host_path[2:].replace('/','_')
@@ -237,7 +237,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#src
 	if len(container_path[1:].split('/', 1)) > 1:
 	  last_part_of_container_path = container_path[1:].split('/', 1)[1]	#app
-	else
+	else:
 	  last_part_of_container_path = ""
 	staging_mount_point = "/tmp/ctransform"
 
