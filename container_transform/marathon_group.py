@@ -158,16 +158,16 @@ def	copy_content_to_external_volume( external_volume_name, source_path, mount_pa
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
-	data_dir="data"
-	print("**DEBUG: mkdir {0} ".format(mount_point+"/"+mount_path+"/"+data_dir))
+	#data_dir="data"
+	#print("**DEBUG: mkdir {0} ".format(mount_point+"/"+mount_path+"/"+data_dir))
 	#mkdir "/data"
-	command = "mkdir "+mount_point+"/"+mount_path+"/"+data_dir
-	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()
+	#command = "mkdir "+mount_point+"/"+mount_path+"/"+data_dir
+	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	#(out, err) = proc.communicate()
 
 	#copy everything to /mnt/mesos/sandbox/
 	#copy source to mount_path/src_path
-	sandbox="mnt/mesos/sandbox"
+	#sandbox="mnt/mesos/sandbox"
 
 	#print("**DEBUG: SANDBOX path to be created is: {}".format(mount_point+"/"+sandbox+"/"+mount_path))
 	#command = "mkdir -p "+mount_point+"/"+sandbox+"/"+mount_path
@@ -239,6 +239,7 @@ def modify_volume_for_external ( volume, app_name ):
 	#copy content from volume[hostPath] to volume
 	copy_content_to_external_volume( external_volume_name, host_path, \
 		first_part_of_container_path, last_part_of_container_path )
+		#src, /app"
 	#modify volume
 	volume['external'] = { 						#mount it as external volume
 		'name': external_volume_name,
@@ -248,7 +249,7 @@ def modify_volume_for_external ( volume, app_name ):
 		}
 	}
 	#change containerPath to the firstPiece only
-	volume['containerPath'] = first_part_of_container_path	#src		
+	volume['containerPath'] = "/"+first_part_of_container_path	#absolute /src in container, not "src" which would be /mnt/mesos/sandbox/src	
 	del( volume['hostPath'] )							#external volumes do not use hostpath
 
 	return volume
