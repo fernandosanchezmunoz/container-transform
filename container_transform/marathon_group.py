@@ -277,7 +277,7 @@ def modify_volume_for_uri( volume, app_name, app_server_address ):
 	artifact_name = app_name+'-'+host_path[2:].replace('/','_')+".tgz"
 
 	#create subdir for with containerpath
-	staging_dir = staging_mount_point+container_path[1:]
+	staging_dir = staging_mount_point+container_path[1:]+"/"
 	print("**DEBUG: Create staging dir {0}".format(staging_dir) ) #remove leading slash
 	command = "mkdir -p "+staging_dir[1:]
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
