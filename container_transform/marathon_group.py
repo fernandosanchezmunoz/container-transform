@@ -199,7 +199,8 @@ def modify_volume_for_external ( volume, app_name ):
 	#last_part_of_host_path = host_path.split('/' , 1)[1]		#NULL
 	container_path = volume['containerPath']							#/src/app
 	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#src
-	last_part_of_container_path = container_path[1:].split('/', 1)[1]	#app
+	if len(container_path[1:].split('/', 1)) > 1:
+	  last_part_of_container_path = container_path[1:].split('/', 1)[1]	#app
 	#create a volume 
 	external_volume_name = app_name+'-'+host_path[2:].replace('/','_')
 	create_external_volume( external_volume_name ) #nextcloud_apps_UUID
