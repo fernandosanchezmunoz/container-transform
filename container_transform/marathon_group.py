@@ -339,7 +339,7 @@ if __name__ == "__main__":
 		)
 	parser.add_argument('-i', '--input', help='name of the file including the list of containers', required=True)
 	parser.add_argument('-n', '--name', help='name to be given to the Marathon Service Group', required=True)
-	parser.add_argument('-s', '--server', help='address of the app server to be used for artifacts', required=false)		
+	parser.add_argument('-s', '--server', help='address of the app server to be used for artifacts', required=False)		
 	args = vars( parser.parse_args() )
 
 	#remove the trailing \n from file
