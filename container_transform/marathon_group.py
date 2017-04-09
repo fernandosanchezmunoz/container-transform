@@ -292,7 +292,7 @@ def modify_volume_for_uri( volume, app_name, app_server_address ):
 	(out, err) = proc.communicate()		
 
 	#compress staging_dir to artifact
-	print("**DEBUG: Compress {0} into {1}".format(staging_dir, artifact_name))
+	print("**DEBUG: Compress {0} into {1} with relative path {2}".format(staging_dir, artifact_name,staging_mount_point ))
 	command = "tar -zcvf -C "+staging_mount_point+" "+artifact_name+" "+staging_dir #compress this directory
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
