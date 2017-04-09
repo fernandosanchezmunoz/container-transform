@@ -283,6 +283,8 @@ def modify_volume_for_uri( volume, app_name, app_server_address ):
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
 
+	input( "***DEBUG: Press ENTER to continue...")
+
 	#copy contents to staging dir
 	print("**DEBUG: Copy {0} into {1}".format(host_path+'/*', staging_dir))
 	command = "cp -r "+host_path+"/* "+staging_dir
