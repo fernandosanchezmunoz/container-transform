@@ -248,7 +248,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 
 	#create subdir for staging with containerpath
 	#staging_dir = staging_mount_point+"/"+container_path[1:]+"/"
-	if os.path.isdir(os.pwd()+container_path):
+	if os.path.isdir(os.getcwd()+container_path):
 		container_dir = container_path
 		print("**DEBUG: is dir: {0}".format(os.path.basename(container_basename)) ) #remove leading slash
 	else:
