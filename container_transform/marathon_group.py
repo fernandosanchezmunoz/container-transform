@@ -255,7 +255,8 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 		container_dir = os.path.dirname(container_path)
 		print("**DEBUG: is file: {0} and dirname is {1}".format(container_path, container_dir) ) #remove leading slash		
 
-	staging_dir = staging_mount_point+"/"+app_name+container_dir #/tmp/ctransform/nginx-php/etc/nginx/conf.d
+	staging_app_dir =staging_mount_point+"/"+app_name
+	staging_dir = staging_app_dir+container_dir #/tmp/ctransform/nginx-php/etc/nginx/conf.d
 	print("**DEBUG: Create staging dir {0}".format(staging_dir) ) #remove leading slash
 	command = "sudo mkdir -p "+staging_dir
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
@@ -268,7 +269,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	(out, err) = proc.communicate()		
 
 	#compress staging_dir to artifact
-	print("**DEBUG: Compress {0} into {1} with relative path {2}".format(staging_mount_point, artifact_name,staging_mount_point ))
+	print("**DEBUG: Compress {0} into {1} with relative path {2}".format(staging_app_dir, artifact_name,staging_app_dir ))
 	command = "tar -C "+staging_mount_point+" -cvzf "+artifact_name+" "+host_path #compress this directory
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
@@ -281,10 +282,10 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	(out, err) = proc.communicate()
 
 	#remove staging_dir 
-	#print("**DEBUG: Remove {0}".format(staging_dir))
-	#command = "rm -Rf "+staging_dir 
-	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
-	#(out, err) = proc.communicate()
+	print("**DEBUG: Remove {0}".format(staging_dir))
+	command = "rm -Rf "+staging_dir 
+	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()
 
 	return artifact_name
 
