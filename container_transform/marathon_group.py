@@ -268,15 +268,15 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	(out, err) = proc.communicate()		
 
 	#compress staging_dir to artifact
-	print("**DEBUG: Compress {0} into {1} with relative path {2}".format(staging_app_dir, artifact_name,staging_app_dir ))
-	command = "cd "+staging_app_dir+" && tar -cvf "+artifact_name+" -C "+staging_app_dir+" "+staging_app_dir #compress this directory
+	print("**DEBUG: Compress {0} into {1} with relative path {2}".format(staging_app_dir, staging_app_dir+artifact_name,staging_app_dir ))
+	command = "cd "+staging_app_dir+" && tar -cvf "+staging_app_dir+artifact_name+" -C "+staging_app_dir+" "+staging_app_dir #compress this directory
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
 	#TODO: put artifact in web server
 	web_server_location="/root/DCOS_install/genconf/serve"
-	print("**DEBUG: mv {0} into {1}".format(artifact_name, web_server_location))
-	command = "mv "+artifact_name+" "+web_server_location
+	print("**DEBUG: mv {0} into {1}".format(staging_app_dir+artifact_name, web_server_location))
+	command = "mv "+staging_app_dir+artifact_name+" "+web_server_location
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
