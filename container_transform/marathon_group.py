@@ -221,7 +221,7 @@ def modify_volume_for_external ( volume, app_name ):
 
 	return volume
 
-def modify_volume_for_uri( volume, app_name, app_server_address ):
+def create_artifact_from_volume( volume, app_name, app_server_address ):
 	"""
 	Compress and copy the application in "source_path". Upload it to "app_server_address" so that it can be downloaded as URI.
 	"""
@@ -266,10 +266,10 @@ def modify_volume_for_uri( volume, app_name, app_server_address ):
 	(out, err) = proc.communicate()
 
 	#remove staging_dir 
-	#print("**DEBUG: Remove {0}".format(staging_dir))
-	#command = "rm -Rf "+staging_dir 
-	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
-	#(out, err) = proc.communicate()
+	print("**DEBUG: Remove {0}".format(staging_dir))
+	command = "rm -Rf "+staging_dir 
+	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()
 
 	return artifact_name
 
@@ -303,9 +303,11 @@ def modify_group ( group, app_server_address ):
 		#modify all volumes in the groups apps so that "this directory" volumes become external or downloaded from URI
 		for volume in app.get('container', {}).get('volumes', {}):
 			if volume['hostPath'][:2] == "./":			#if the volume is "this dir" for compose
+				#FIRST CASE: using external persistent volumes, map ./DIR to a volume called DIR
 				#volume = modify_volume_for_external( volume, group_dict['id']+'-'+app['id'] )	
 						#modify it so that the local files are reachable via external volume
-				artifact_name = modify_volume_for_uri( volume, group_dict['id']+'-'+app['id'], app_server_address )
+				#SECOND CASE: generate an artifact with the code in the local volume and add it as a URI
+				artifact_name = create_artifact_from_volume( volume, group_dict['id']+'-'+app['id'], app_server_address )
 				uri = "http://"+app_server_address+"/"+artifact_name
 				if 'uris' in app:
 					app['uris'].append( uri )
