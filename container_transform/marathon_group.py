@@ -233,7 +233,8 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	#last_part_of_host_path = host_path.split('/' , 1)[1]		#NULL
 	container_path = volume['containerPath']							#/src/app
 	first_part_of_container_path = container_path[1:].split('/', 1)[0]	#src
-	last_part_of_container_path = container_path[1:].split('/', 1)[1]	#app
+	if len(container_path[1:].split('/', 1)) > 1:
+	  last_part_of_container_path = container_path[1:].split('/', 1)[1]	#app
 	staging_mount_point = "/tmp/ctransform"
 
 	#create an artifact 
