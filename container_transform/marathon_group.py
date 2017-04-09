@@ -167,21 +167,21 @@ def	copy_content_to_external_volume( external_volume_name, source_path, mount_pa
 
 	#copy everything to /mnt/mesos/sandbox/
 	#copy source to mount_path/src_path
-	sandbox="/mnt/mesos/sandbox"
+	sandbox="mnt/mesos/sandbox"
 
-	print("**DEBUG: SANDBOX path to be created is: {}".format(mount_point+"/"+sandbox+mount_path))
-	command = "mkdir -p "+mount_point+"/"+sandbox+mount_path
+	print("**DEBUG: SANDBOX path to be created is: {}".format(mount_point+"/"+sandbox+"/"+mount_path))
+	command = "mkdir -p "+mount_point+"/"+sandbox+"/"+mount_path
 	proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
 
-	print("**DEBUG: COPY from {0} to {1}".format(source_path, mount_point+"/"+sandbox+mount_path+"/"+source_path[2:]))
-	command = "cp -R "+source_path+" "+mount_point+"/"+sandbox+mount_path+"/"+source_path[2:]
+	print("**DEBUG: COPY from {0} to {1}".format(source_path, mount_point+"/"+sandbox+"/"+mount_path+"/"+source_path[2:]))
+	command = "cp -R "+source_path+" "+mount_point+"/"+sandbox+"/"+mount_path+"/"+source_path[2:]
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()	
 
-	print("**DEBUG: COPY from {0} to {1}".format(source_path, mount_point+"/"+sandbox+mount_path+"/"+source_path[2:]))
+	print("**DEBUG: COPY from {0} to {1}".format(source_path, mount_point+"/"+sandbox+"/"+mount_path+"/"+source_path[2:]))
 
-	command = "cp -R "+source_path+" "+mount_point+"/"+sandbox+source_path[2:]
+	command = "cp -R "+source_path+" "+mount_point+"/"+sandbox+"/"+source_path[2:]
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
