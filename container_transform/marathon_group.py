@@ -268,8 +268,8 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	(out, err) = proc.communicate()		
 
 	#compress staging_dir to artifact
-	print("**DEBUG: Compress {0} into {1} with relative path {2}".format(staging_app_dir, artifact_name,staging_dir ))
-	command = "tar -v -C "+staging_dir+" -cvzf "+artifact_name+" "+staging_app_dir #compress this directory
+	print("**DEBUG: Compress {0} into {1} with relative path {2}".format(staging_app_dir, artifact_name,staging_app_dir ))
+	command = "tar -v -C "+staging_app_dir+" -cvzf "+artifact_name+" "+staging_app_dir #compress this directory
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
