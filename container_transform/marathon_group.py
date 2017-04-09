@@ -274,9 +274,23 @@ def modify_volume_for_uri( volume, app_name, app_server_address ):
 
 	#create an artifact 
 	artifact_name = app_name+'-'+host_path[2:].replace('/','_')+".tgz"
-	#compress app to artifact
-	print("**DEBUG: Compress {0} into {1}".format(host_path, artifact_name))
-	command = "tar -zcvf "+artifact_name+" ." #compress this directory
+
+	#create subdir for with containerpath
+	staging_dir = containerPath[1:]
+	print("**DEBUG: Create staging dir {0}".format(staging_dir) ) #remove leading slash
+	command = "mkdir -p "+staging_dir[1:]
+	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()		
+
+	#copy contents to staging dir
+	print("**DEBUG: Copy {0} into {1}".format(host_path, staging_dir))
+	command = "cp -r "+host_path+" "+staging_dir
+	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()		
+
+	#compress staging_dir to artifact
+	print("**DEBUG: Compress {0} into {1}".format(staging_dir, artifact_name))
+	command = "tar -zcvf "+artifact_name+" "+staging_dir #compress this directory
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
@@ -284,6 +298,12 @@ def modify_volume_for_uri( volume, app_name, app_server_address ):
 	web_server_location="/root/DCOS_install/genconf/serve"
 	print("**DEBUG: mv {0} into {1}".format(artifact_name, web_server_location))
 	command = "mv "+artifact_name+" "+web_server_location
+	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()
+
+	#remove staging_dir 
+	print("**DEBUG: Remove {0}".format(staging_dir))
+	command = "rm -Rf "+staging_dir 
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
@@ -322,7 +342,7 @@ def modify_group ( group, app_server_address ):
 				#volume = modify_volume_for_external( volume, group_dict['id']+'-'+app['id'] )	
 						#modify it so that the local files are reachable via external volume
 				artifact_name = modify_volume_for_uri( volume, group_dict['id']+'-'+app['id'], app_server_address )
-				uri = app_server_address+"/"+artifact_name
+				uri = "http://"+app_server_address+"/"+artifact_name
 				if 'uris' in app:
 					app['uris'].append( uri )
 				else:
