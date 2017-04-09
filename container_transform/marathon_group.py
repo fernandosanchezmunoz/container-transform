@@ -131,11 +131,6 @@ def	copy_content_to_external_volume( external_volume_name, source_path, mount_pa
 
 	print("**DEBUG: MOUNT command result {}".format(out.decode('utf-8')))
 
-	#create path
-	#command = "mkdir -p "+mount_point+"/"+dest_path
-	#proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
-	#(out, err) = proc.communicate()	
-
 	#create mount path
 	print("**DEBUG: MOUNT path to be created is: {}".format(mount_point+"/"+mount_path))
 	command = "mkdir -p "+mount_point+"/"+mount_path
@@ -158,45 +153,12 @@ def	copy_content_to_external_volume( external_volume_name, source_path, mount_pa
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
-	#data_dir="data"
-	#print("**DEBUG: mkdir {0} ".format(mount_point+"/"+mount_path+"/"+data_dir))
-	#mkdir "/data"
-	#command = "mkdir "+mount_point+"/"+mount_path+"/"+data_dir
-	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
-	#(out, err) = proc.communicate()
-
-	#copy everything to /mnt/mesos/sandbox/
-	#copy source to mount_path/src_path
-	#sandbox="mnt/mesos/sandbox"
-
-	#print("**DEBUG: SANDBOX path to be created is: {}".format(mount_point+"/"+sandbox+"/"+mount_path))
-	#command = "mkdir -p "+mount_point+"/"+sandbox+"/"+mount_path
-	#proc = subprocess.Popen( [command], stdout=subprocess.PIPE, shell=True)
-	#(out, err) = proc.communicate()	
-
-	#print("**DEBUG: COPY from {0} to {1}".format(source_path, mount_point+"/"+sandbox+"/"+mount_path+"/"+source_path[2:]))
-	#command = "cp -R "+source_path+" "+mount_point+"/"+sandbox+"/"+mount_path+"/"+source_path[2:]
-	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
-	#(out, err) = proc.communicate()	
-
-	#print("**DEBUG: COPY from {0} to {1}".format(source_path, mount_point+"/"+sandbox+"/"+source_path[2:]))
-
-	#command = "cp -R "+source_path+" "+mount_point+"/"+sandbox+"/"+source_path[2:]
-	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
-	#(out, err) = proc.communicate()
-
-	#chmod 777 *
 	print("**DEBUG: COPY from {0} to {1}".format(source_path, mount_point+"/"+mount_path+"/"+source_path[2:]))
 
 	#copy source to mount_path/src_path
 	command = "chmod -R 777 "+source_path+" "+mount_point
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
-
-	#copy source to mount_path - not needed, just need to CREATE mount_path
-	#command = "cp -R "+source_path+" "+mount_point+"/"+mount_path
-	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
-	#(out, err) = proc.communicate()
 
 	#sync
 	command = "sync"
@@ -276,15 +238,13 @@ def modify_volume_for_uri( volume, app_name, app_server_address ):
 	#create an artifact 
 	artifact_name = app_name+'-'+host_path[2:].replace('/','_')+".tgz"
 
-	#create subdir for with containerpath
+	#create subdir for staging with containerpath
 	#staging_dir = staging_mount_point+"/"+container_path[1:]+"/"
 	staging_dir = staging_mount_point+"/"+last_part_of_container_path
 	print("**DEBUG: Create staging dir {0}".format(staging_dir) ) #remove leading slash
 	command = "sudo mkdir -p "+staging_dir
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
-
-	input( "***DEBUG: Press ENTER to continue...")
 
 	#copy contents to staging dir
 	print("**DEBUG: Copy {0} into {1}".format(host_path+'/*', staging_dir))
