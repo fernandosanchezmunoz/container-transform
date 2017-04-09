@@ -259,7 +259,7 @@ def modify_volume_for_external ( volume, app_name ):
 
 	return volume
 
-def modify_volume_for_uri( volume, source_path, app_server_address ):
+def modify_volume_for_uri( volume, app_name, app_server_address ):
 	"""
 	Compress and copy the application in "source_path". Upload it to "app_server_address" so that it can be downloaded as URI.
 	"""
