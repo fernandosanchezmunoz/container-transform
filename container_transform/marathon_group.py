@@ -258,7 +258,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	staging_app_dir =staging_mount_point+"/"+app_name # /tmp/ctransform/nginx-php-group-web
 	staging_container_path = staging_app_dir+container_dir #/tmp/ctransform/nginx-php-group-web/etc/nginx/conf.d
 	print("**DEBUG: Create staging dir {0}".format(staging_container_path) ) #remove leading slash
-	command = "sudo mkdir -p "+staging_dir
+	command = "sudo mkdir -p "+staging_container_path
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
 
