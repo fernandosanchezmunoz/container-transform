@@ -263,8 +263,12 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	(out, err) = proc.communicate()		
 
 	#copy contents to staging dir
-	print("**DEBUG: Copy {0} into {1}".format(host_path, staging_container_path))
-	command = "cp -r "+host_path+"/. "+staging_container_path
+	#if it's a directory, add "/." to copy contents not directory
+	host_path_to_copy=host_path
+	if os.path.isdir(host_path):
+		host_path_to_copy+="/."
+	print("**DEBUG: Copy {0} into {1}".format(host_path_to_copy, staging_container_path))
+	command = "cp -r "+host_path_to_copy+" "+staging_container_path
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
 
