@@ -256,15 +256,15 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 		print("**DEBUG: source host path is file: {0} and container dirname will be {1}".format(host_path[1:], container_dir) ) #remove leading slash		
 
 	staging_app_dir =staging_mount_point+"/"+app_name # /tmp/ctransform/nginx-php-group-web
-	staging_dir = staging_app_dir+container_dir #/tmp/ctransform/nginx-php-group-web/etc/nginx/conf.d
-	print("**DEBUG: Create staging dir {0}".format(staging_dir) ) #remove leading slash
+	staging_container_path = staging_app_dir+container_dir #/tmp/ctransform/nginx-php-group-web/etc/nginx/conf.d
+	print("**DEBUG: Create staging dir {0}".format(staging_container_path) ) #remove leading slash
 	command = "sudo mkdir -p "+staging_dir
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
 
 	#copy contents to staging dir
-	print("**DEBUG: Copy {0} into {1}".format(host_path, staging_dir))
-	command = "cp -r "+host_path+" "+staging_dir
+	print("**DEBUG: Copy {0} into {1}".format(host_path, staging_container_path))
+	command = "cp -r "+host_path+" "+staging_container_path
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
 
