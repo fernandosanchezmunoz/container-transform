@@ -321,7 +321,7 @@ def modify_group ( group, app_server_address ):
 				portMapping['labels'] = { "VIP_0": vip }
 				#containerPort and hostPort are inverted??
 				portMapping['containerPort'] = portMapping['hostPort']
-				portMapping['hostPort'] = 0
+				#portMapping['hostPort'] = 0  #BUG? Node issue? hostPort and containerPort need to be the same.
 				#make the app available in MarathonLB
 				if 'labels' in app:
 					app['labels'].update( {"HAPROXY_GROUP": "external"} )# if there was a hostPort add to MLB
