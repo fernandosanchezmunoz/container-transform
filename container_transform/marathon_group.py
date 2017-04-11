@@ -9,6 +9,7 @@ import sys
 import argparse
 import subprocess
 import os
+import ast
 
 def create_pod( name, containers ):
 	"""
@@ -53,7 +54,8 @@ def adapt_containers_to_pod( containers, name ):
 
 	pod_containers=[]
 	print("**DEBUG: containers is \n{0}".format(containers))
-	#containers = list( "".join(list(containers) ))
+	containers = ast.literal_eval(containers)
+	print("**DEBUG: containers is \n{0}".format(containers))	
 	print("**DEBUG: containers is of type\n{0}".format(type(containers)))
 	for container in containers:
 		container = json.loads( container )
