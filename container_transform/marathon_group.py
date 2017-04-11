@@ -23,7 +23,7 @@ def create_pod( name, containers ):
 	pod_mem="256"
 	pod_disk="256"
 	#adapt all containers to pod format
-	pod_containers = adapt_containers_to_pod( list(containers[2:]), name )
+	pod_containers = adapt_containers_to_pod( containers, name )
 
 	output = '{ 							\
 	  "id": "'+name+'",						\
@@ -52,6 +52,8 @@ def adapt_containers_to_pod( containers, name ):
 	"""
 
 	pod_containers=[]
+	print("**DEBUG: containers is \n {0}".format(containers))
+	containers = list( containers )
 	print("**DEBUG: containers is \n {0}".format(containers))
 	for container in containers:
 		container = json.loads( container )
