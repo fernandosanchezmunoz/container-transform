@@ -63,10 +63,9 @@ def adapt_containers_to_pod( containers, name ):
 			endpoint['hostPort'] = portMapping['hostPort']
 			endpoint['protocol'] = [ portMapping['protocol'] ]
 			temp_container['endpoints'] += endpoint
-		temp_container['image'] = { 
-			'kind': container['type']
-			'id': container['docker']['image']
-			}
+		temp_container['image'] = { } 
+		temp_container['image']['kind']: container['type']
+		temp_container['image']['id']: container['docker']['image']
 		pod_containers += container
 	print("**DEBUG: pod_containers is {0}".format(containers))
 
