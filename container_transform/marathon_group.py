@@ -53,6 +53,7 @@ def adapt_containers_to_pod( containers, name ):
 
 	pod_containers=[]
 	for container in containers:
+		container = json.loads( container )
 		temp_container = {}
 		temp_container['name'] = container['id']
 		#TODO: figure out resources
