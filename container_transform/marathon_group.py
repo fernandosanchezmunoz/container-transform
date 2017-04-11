@@ -319,6 +319,8 @@ def modify_group ( group, app_server_address ):
 				#create a VIP for every app, with a known pattern: group_dict['id']+'-'+app['id']:hostPort
 				vip = "/"+group_dict['id']+'-'+app['id']+":"+str(portMapping['hostPort'])
 				portMapping['labels'] = { "VIP_0": vip }
+				#containerPort and hostPort are inverted??
+				portMapping['containerPort'] = portMapping['hostPort']
 				portMapping['hostPort'] = 0
 				#make the app available in MarathonLB
 				if 'labels' in app:
@@ -342,6 +344,8 @@ def modify_group ( group, app_server_address ):
 				#artifact will be downloaded to /mnt/mesos/sandbox
 				#remove the volume
 				del( volume )
+
+		#correct dependencies:  "/db:redis" should be "redis" or "db"
 
 	return json.dumps( group_dict )
 
