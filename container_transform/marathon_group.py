@@ -274,7 +274,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 
 	#test for Node.JS -- suspect it doesn't go into staging_container_path and instead it executes from staging_app_dir. Copy there	
 	print("**DEBUG: Copy {0} into {1}".format(host_path_to_copy, staging_app_dir))
-	command = "cp -r "+host_path_to_copy+" "+staging_app_dir
+	command = "cp -r "+host_path_to_copy+" "+staging_app_dir+"/"+last_part_of_container_path
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
