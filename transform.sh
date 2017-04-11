@@ -10,6 +10,17 @@ APP_NAME="$1"
 BASE_DIR="./data/"
 WORKING_DIR=$BASE_DIR$APP_NAME
 CURRENT_DIR=$PWD
+COMMAND_PIP_CHECK=$(pip list --format columns|grep container-transform)
+MY_IP=$(ip addr show eth0 | grep -Eo \
+ '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -1)
+
+#pre-requisites: container-transform
+if [[ $COMMAND_PIP_CHECK == *"container-transform"* ]]; then
+	echo "**INFO: container-transform available."
+else
+	echo "**INFO: container-transform available."
+	pip install container-transform
+fi
 
 #read example name from first argument
 if [ -z "$1" ]; then
@@ -24,7 +35,7 @@ cd $WORKING_DIR
 container-transform -i compose -o marathon docker-compose.yml > marathon.json 
 echo "***** MARATHON.JSON *****"
 cat marathon.json
-../../container_transform/marathon_group.py -i marathon.json -n ${PWD##*/}-"group"  > group.json
+../../container_transform/marathon_group.py -i marathon.json -n ${PWD##*/}-"group" -s $MY_IP #produces group.json
 echo "***** GROUP.JSON *****"
 cat group.json
 
