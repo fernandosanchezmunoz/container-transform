@@ -23,6 +23,7 @@ def create_pod( name, containers ):
 	pod_mem="256"
 	pod_disk="256"
 	#adapt all containers to pod format
+	containers=list(containers)
 	pod_containers = adapt_containers_to_pod( containers, name )
 
 	output = '{ 							\
