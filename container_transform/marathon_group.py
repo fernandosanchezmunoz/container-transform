@@ -270,7 +270,13 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	print("**DEBUG: Copy {0} into {1}".format(host_path_to_copy, staging_container_path))
 	command = "cp -r "+host_path_to_copy+" "+staging_container_path
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()		
+	(out, err) = proc.communicate()
+
+	#test for Node.JS -- suspect it doesn't go into staging_container_path and instead it executes from staging_app_dir. Copy there	
+	print("**DEBUG: Copy {0} into {1}".format(host_path_to_copy, staging_app_dir))
+	command = "cp -r "+host_path_to_copy+" "+staging_app_dir
+	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()
 
 	#compress staging_dir to artifact
 	print("**DEBUG: Compress {0} into {1} with relative path {2}".format(staging_app_dir, staging_app_dir+"/"+artifact_name,staging_app_dir ))
