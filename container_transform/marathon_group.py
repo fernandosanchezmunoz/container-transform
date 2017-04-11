@@ -52,6 +52,7 @@ def adapt_containers_to_pod( containers, name ):
 	"""
 
 	pod_containers=[]
+	print("**DEBUG: containers is \n {0}".format(containers))
 	for container in containers:
 		container = json.loads( container )
 		temp_container = {}
