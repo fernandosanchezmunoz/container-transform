@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# marathon_group.py: generate a Marathon Service Group out of a list of containers
+# marathon_group.py: generate a Marathon Service Pod or Group out of a list of containers
 #
 # Author: Fernando Sanchez [ fernando at mesosphere.com ]
 
@@ -9,7 +9,68 @@ import sys
 import argparse
 import subprocess
 import os
-import uuid
+
+def create_pod( name, containers ):
+	"""
+	Creates a marathon pod taking a list of containers as a parameter.
+	If the list has a single member if returns the member.
+	"""
+	#get relevant information of first container
+	#first_container = json.loads( containers[0] )
+	#get port mapping
+	#TODO: get relevant info from first container
+	pod_cpu="0.5"
+	pod_mem="256"
+	pod_disk="256"
+	#adapt all containers to pod format
+	pod_containers = adapt_containers_to_pod( list(containers), name )
+
+	output = '{ 							\
+	  "id": "'+name+'",						\
+	  "containers": "'+pod_containers+'",	\
+  	  "networks": [							\
+        {									\
+          "mode": "host"					\
+        }									\
+      ],									\
+	  "executorResources": {				\
+        "cpus": pod_cpu,					\
+        "mem": pod_mem,						\
+        "disk": pod_disk					\
+	  },									\
+      "labels": {							\
+        "HAPROXY_GROUP": "external"			\
+      }										\
+	  }'
+
+	return str(output)
+
+def adapt_containers_to_pod( containers, name ):
+	"""
+	Receives a list of containers in Marathon single container format.
+	Returns a list of those containers adapted to the Marathon pod format.
+	"""
+
+	pod_containers=[]
+	for container in containers:
+		temp_container = {}
+		temp_container['name'] = container['id']
+		#TODO: figure out resources
+		temp_container['endpoints'] = []
+		for portMapping in container['portMappings']:
+			endpoint = {}
+			endpoint['name'] = name+str(portMapping['containerPort'])
+			endpoint['hostPort'] = portMapping['hostPort']
+			endpoint['protocol'] = [ portMapping['protocol'] ]
+			temp_container['endpoints'] += endpoint
+		temp_container['image'] = { 
+			'kind': container['type']
+			'id': container['docker']['image']
+			}
+		pod_containers += container
+	print("**DEBUG: pod_containers is {0}".format(containers))
+
+	return pod_containers
 
 def create_group ( name, containers ):
 	"""
@@ -354,11 +415,12 @@ if __name__ == "__main__":
 
 	#parse command line arguments
 	parser = argparse.ArgumentParser(description='Convert a list of containers to a Marathon Service Group.', \
-		usage='marathon_group.py -i [container_list_filename] -n [group_name]'
+		usage='marathon_group.py -i [container_list_filename] -n [group_name] [-g]'
 		)
 	parser.add_argument('-i', '--input', help='name of the file including the list of containers', required=True)
 	parser.add_argument('-n', '--name', help='name to be given to the Marathon Service Group', required=True)
-	parser.add_argument('-s', '--server', help='address of the app server to be used for artifacts', required=False)		
+	parser.add_argument('-s', '--server', help='address of the app server to be used for artifacts', required=False)
+	parser.add_argument('-g', '--group', help='create a marathon group instead of a pod', required=False)
 	args = vars( parser.parse_args() )
 
 	#remove the trailing \n from file
@@ -368,10 +430,15 @@ if __name__ == "__main__":
 	#detect if it's just one app - if so, get in list
 	if containers[0]=="{":
 		containers="["+containers+"]" 
-	group = create_group( args['name'], containers ) 
-	modified_group = modify_group( group, args['server'] )
-	output_file=open( "./group.json", "w")
-	print( modified_group, file=output_file )
+	if args['group']:
+		group = create_group( args['name'], containers ) 
+		modified_group = modify_group( group, args['server'] )
+		output_file=open( "./output.json", "w")
+		print( modified_group, file=output_file )
+	else:
+		pod = create_pod( args['name'], containers )
+		print( pod, file=output_file )
+
 	input( "***DEBUG: Press ENTER to continue...")
 	sys.exit(0)
 

@@ -37,10 +37,10 @@ echo "***** MARATHON.JSON *****"
 cat marathon.json
 ../../container_transform/marathon_group.py -i marathon.json -n ${PWD##*/}-"group" -s $MY_IP #produces group.json
 echo "***** GROUP.JSON *****"
-cat group.json
+cat output.json
 
 dcos auth login && \
-dcos marathon group add ./group.json
+dcos marathon group add ./output.json
 
 cd $CURRENT_DIR
 
