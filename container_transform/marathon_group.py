@@ -44,6 +44,7 @@ def create_pod( name, containers ):
       }												\
 	  }'
 
+
 	return str(output)
 
 def adapt_containers_to_pod( containers, name ):
