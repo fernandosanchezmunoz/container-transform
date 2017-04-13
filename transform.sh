@@ -40,7 +40,7 @@ echo "***** GROUP.JSON *****"
 cat output.json
 
 dcos auth login && \
-dcos marathon group add ./output.json
+dcos marathon pod add ./output.json
 
 cd $CURRENT_DIR
 
