@@ -59,7 +59,7 @@ def adapt_containers_to_pod( containers, name ):
 		temp_container['name'] = container['id']
 		#TODO: figure out resources
 		temp_container['endpoints'] = []
-		for portMapping in container['portMappings']:
+		for portMapping in container['docker']['portMappings']:
 			endpoint = {}
 			endpoint['name'] = name+str(portMapping['containerPort'])
 			endpoint['hostPort'] = portMapping['hostPort']
