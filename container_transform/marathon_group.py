@@ -67,7 +67,7 @@ def adapt_containers_to_pod( containers, name ):
 				endpoint['name'] = name+str(portMapping['containerPort'])
 				endpoint['hostPort'] = portMapping['hostPort']
 				endpoint['protocol'] = [ portMapping['protocol'] ]
-				temp_container['endpoints'] += endpoint
+				temp_container['endpoints'].append(endpoint)
 		temp_container['image'] = { } 
 		temp_container['image']['kind'] = container['type']
 		temp_container['image']['id'] = container['docker']['image']
@@ -427,6 +427,7 @@ if __name__ == "__main__":
 	parser.add_argument('-n', '--name', help='name to be given to the Marathon Service Group', required=True)
 	parser.add_argument('-s', '--server', help='address of the app server to be used for artifacts', required=False)
 	parser.add_argument('-g', '--group', help='create a marathon group instead of a pod', required=False)
+	parser.add_argument('-o', '--output', help='name of the file to write output JSON to', required=True, default='output.json')
 	args = vars( parser.parse_args() )
 
 	#remove the trailing \n from file
@@ -440,10 +441,10 @@ if __name__ == "__main__":
 		group = create_group( args['name'], containers ) 
 		modified_group = modify_group( group, args['server'] )
 		output_file=open( "./output.json", "w")
-		print( modified_group, file=output_file )
+		print( modified_group, file=args['output'] )
 	else:
 		pod = create_pod( args['name'], containers )
-		print( pod, file=output_file )
+		print( pod, file=args['output'])
 
 	input( "***DEBUG: Press ENTER to continue...")
 	sys.exit(0)
