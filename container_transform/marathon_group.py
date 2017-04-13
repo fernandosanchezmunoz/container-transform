@@ -71,9 +71,11 @@ def adapt_containers_to_pod( containers, name ):
 		temp_container['image'] = { } 
 		temp_container['image']['kind'] = container['type']
 		temp_container['image']['id'] = container['docker']['image']
-		pod_containers += temp_container
-	print("**DEBUG: pod_containers is {0}".format(pod_containers))
+		print("**DEBUG: temp_container is {0}".format(temp_container))
+		pod_containers.append(temp_container)
+		print("**DEBUG: pod_containers is {0}".format(pod_containers))
 
+	print("**DEBUG: pod_containers is {0}".format(pod_containers))
 	return pod_containers
 
 def create_group ( name, containers ):
