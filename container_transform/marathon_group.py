@@ -26,22 +26,22 @@ def create_pod( name, containers ):
 	#adapt all containers to pod format
 	pod_containers = adapt_containers_to_pod( containers, name )
 
-	output = '{ 							\
-	  "id": "'+name+'",						\
-	  "containers": "'+str(pod_containers)+'",	\
-  	  "networks": [							\
-        {									\
-          "mode": "host"					\
-        }									\
-      ],									\
-	  "executorResources": {				\
-        "cpus": pod_cpu,					\
-        "mem": pod_mem,						\
-        "disk": pod_disk					\
-	  },									\
-      "labels": {							\
-        "HAPROXY_GROUP": "external"			\
-      }										\
+	output = '{ 									\
+	  "id": "'+name+'",								\
+	  "containers": "'+str(pod_containers)+'",		\
+  	  "networks": [									\
+        {											\
+          "mode": "host"							\
+        }											\
+      ],											\
+	  "executorResources": {						\
+        "cpus": "'+pod_cpu+'",						\
+        "mem": "'+pod_mem+'",						\
+        "disk": "'+pod_disk+'"						\
+	  },											\
+      "labels": {									\
+        "HAPROXY_GROUP": "external"					\
+      }												\
 	  }'
 
 	return str(output)
@@ -427,7 +427,7 @@ if __name__ == "__main__":
 	parser.add_argument('-n', '--name', help='name to be given to the Marathon Service Group', required=True)
 	parser.add_argument('-s', '--server', help='address of the app server to be used for artifacts', required=False)
 	parser.add_argument('-g', '--group', help='create a marathon group instead of a pod', required=False)
-	parser.add_argument('-o', '--output', help='name of the file to write output JSON to', required=False, default='output.json')
+	parser.add_argument('-o', '--output', help='name of the file to write output JSON to', required=Falses, default='output.json')
 	args = vars( parser.parse_args() )
 
 	#remove the trailing \n from file
