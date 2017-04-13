@@ -55,7 +55,7 @@ def adapt_containers_to_pod( containers, name ):
 	pod_containers=[]
 	print("**DEBUG: containers is \n{0}<<<".format(containers))
 	print("**DEBUG: containers is of type\n{0}<<<".format(type(containers)))
-	containers2 = ast_listeral_eval(containers)
+	containers2 = ast_literal_eval(containers)
 	print("**DEBUG: containers is \n{0}<<<".format(containers2))	
 	print("**DEBUG: containers is of type\n{0}<<<".format(type(containers2)))
 	for container in containers2:
