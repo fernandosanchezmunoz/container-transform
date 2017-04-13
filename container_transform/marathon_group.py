@@ -53,13 +53,8 @@ def adapt_containers_to_pod( containers, name ):
 	"""
 
 	pod_containers=[]
-	print("**DEBUG: containers is \n{0}<<<".format(containers))
-	print("**DEBUG: containers is of type\n{0}<<<".format(type(containers)))
-	containers2 = json.loads(containers)
-	print("**DEBUG: containers is \n{0}<<<".format(containers2))	
-	print("**DEBUG: containers is of type\n{0}<<<".format(type(containers2)))
-	for container in containers2:
-		container = json.loads( container )
+	container_list = json.loads(containers)
+	for container in containers_list:
 		temp_container = {}
 		temp_container['name'] = container['id']
 		#TODO: figure out resources
@@ -74,7 +69,7 @@ def adapt_containers_to_pod( containers, name ):
 		temp_container['image']['kind'] = container['type']
 		temp_container['image']['id'] = container['docker']['image']
 		pod_containers += container
-	print("**DEBUG: pod_containers is {0}".format(containers))
+	print("**DEBUG: pod_containers is {0}".format(pod_containers))
 
 	return pod_containers
 
