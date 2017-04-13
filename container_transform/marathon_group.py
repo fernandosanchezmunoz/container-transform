@@ -61,7 +61,7 @@ def adapt_containers_to_pod( containers, name ):
 		temp_container['endpoints'] = []
 		container = container['container']  #it's embedded
 		print("**DEBUG: container is {0}".format(container))
-		if ['portMappings'] in container['docker']['portMappings']:
+		if ['portMappings'] in container['docker']:
 			for portMapping in container['docker']['portMappings']:
 				endpoint = {}
 				endpoint['name'] = name+str(portMapping['containerPort'])
