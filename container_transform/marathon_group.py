@@ -28,7 +28,7 @@ def create_pod( name, containers ):
 
 	output = '{ 							\
 	  "id": "'+name+'",						\
-	  "containers": "'+pod_containers+'",	\
+	  "containers": "'+str(pod_containers)+'",	\
   	  "networks": [							\
         {									\
           "mode": "host"					\
@@ -71,7 +71,7 @@ def adapt_containers_to_pod( containers, name ):
 		temp_container['image'] = { } 
 		temp_container['image']['kind'] = container['type']
 		temp_container['image']['id'] = container['docker']['image']
-		pod_containers += container
+		pod_containers += temp_container
 	print("**DEBUG: pod_containers is {0}".format(pod_containers))
 
 	return pod_containers
