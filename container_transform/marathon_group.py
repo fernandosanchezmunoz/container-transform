@@ -61,12 +61,13 @@ def adapt_containers_to_pod( containers, name ):
 		temp_container['endpoints'] = []
 		container = container['container']  #it's embedded
 		print("**DEBUG: container is {0}".format(container))
-		for portMapping in container['docker']['portMappings']:
-			endpoint = {}
-			endpoint['name'] = name+str(portMapping['containerPort'])
-			endpoint['hostPort'] = portMapping['hostPort']
-			endpoint['protocol'] = [ portMapping['protocol'] ]
-			temp_container['endpoints'] += endpoint
+		if ['portMappings'] in container['docker']['portMappings']:
+			for portMapping in container['docker']['portMappings']:
+				endpoint = {}
+				endpoint['name'] = name+str(portMapping['containerPort'])
+				endpoint['hostPort'] = portMapping['hostPort']
+				endpoint['protocol'] = [ portMapping['protocol'] ]
+				temp_container['endpoints'] += endpoint
 		temp_container['image'] = { } 
 		temp_container['image']['kind'] = container['type']
 		temp_container['image']['id'] = container['docker']['image']
