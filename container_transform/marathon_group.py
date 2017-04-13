@@ -427,7 +427,7 @@ if __name__ == "__main__":
 	parser.add_argument('-n', '--name', help='name to be given to the Marathon Service Group', required=True)
 	parser.add_argument('-s', '--server', help='address of the app server to be used for artifacts', required=False)
 	parser.add_argument('-g', '--group', help='create a marathon group instead of a pod', required=False)
-	parser.add_argument('-o', '--output', help='name of the file to write output JSON to', required=True, default='output.json')
+	parser.add_argument('-o', '--output', help='name of the file to write output JSON to', required=False, default='output.json')
 	args = vars( parser.parse_args() )
 
 	#remove the trailing \n from file
