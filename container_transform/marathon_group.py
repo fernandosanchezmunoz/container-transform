@@ -427,7 +427,7 @@ if __name__ == "__main__":
 	parser.add_argument('-n', '--name', help='name to be given to the Marathon Service Group', required=True)
 	parser.add_argument('-s', '--server', help='address of the app server to be used for artifacts', required=False)
 	parser.add_argument('-g', '--group', help='create a marathon group instead of a pod', required=False)
-	parser.add_argument('-o', '--output', help='name of the file to write output JSON to', required=False, default='output.json')
+	parser.add_argument('-o', '--output', help='name of the file to write output JSON to', required=True, default='output.json')
 	args = vars( parser.parse_args() )
 
 	#remove the trailing \n from file
@@ -437,14 +437,14 @@ if __name__ == "__main__":
 	#detect if it's just one app - if so, get in list
 	if containers[0]=="{":
 		containers="["+containers+"]" 
+	output_file=open( args['output'], "w")
 	if args['group']:
 		group = create_group( args['name'], containers ) 
 		modified_group = modify_group( group, args['server'] )
-		output_file=open( "./output.json", "w")
-		print( modified_group, file=args['output'] )
+		print( modified_group, file=output_file )
 	else:
 		pod = create_pod( args['name'], containers )
-		print( pod, file=args['output'])
+		print( pod, file=output_file )
 
 	input( "***DEBUG: Press ENTER to continue...")
 	sys.exit(0)
