@@ -24,7 +24,7 @@ def create_pod( name, apps, app_server_address ):
 	#pod_disk=50
 
 	#adapt all containers to pod format
-	pod_apps = adapt_apps_to_pod( apps, name, app_server_address )
+	pod_apps, hostPath = adapt_apps_to_pod( apps, name, app_server_address )
 
 	output = '{ 									\
 	  "id": "/'+name+'",							\
@@ -43,7 +43,7 @@ def create_pod( name, apps, app_server_address ):
       },											\
       "volumes": [ { 								\
       	"name": "sandbox",							\
-      	"host": "app"								\
+      	"host": "'+hostPath+'"						\
       	}]											\
 	  }'
 
@@ -55,7 +55,7 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 	Receives a list of apps in Marathon single container format.
 	Returns a list of those containers adapted to the Marathon pod format.
 	"""
-	COMMAND = "cp -r $MESOS_SANDBOX/* $(pwd); npm start"
+	#COMMAND = "cp -r $MESOS_SANDBOX/* $(pwd); npm start"
 	app_cpu = 0.3
 	app_mem = 256
 
@@ -71,7 +71,7 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		}
 		#adapt volumes
 		print("**DEBUG: app is {0}".format(app))
-		app_uris = adapt_app_volumes_for_uri( app, app_server_address )
+		app_uris, hostPath = adapt_app_volumes_for_uri( app, app_server_address )
 		print("**DEBUG: app with URIs is {0}".format(app_uris))
 		temp_app['volumeMounts'] = app_uris.get('volumeMounts', [])
 		temp_app['artifacts'] = []
@@ -102,7 +102,7 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 
 
 	print("**DEBUG: pod_apps is {0}".format(pod_apps))
-	return json.dumps(pod_apps)
+	return ( json.dumps(pod_apps), hostPath )
 
 
 def adapt_app_volumes_for_uri( app, app_server_address ):
@@ -123,6 +123,9 @@ def adapt_app_volumes_for_uri( app, app_server_address ):
 				#volume = modify_volume_for_external( volume, group_dict['id']+'-'+app['id'] )	
 						#modify it so that the local files are reachable via external volume
 				#SECOND CASE: generate an artifact with the code in the local volume and add it as a URI
+				#find path where this will be mounted in the host for the pod
+				hostPath = volume['hostPath'][2:]
+				print("**DEBUG: hostPath is {0}".format(hostPath))
 				app_id=new_app.get('id', {})
 				container_id=new_app.get('container', {}).get('docker',{}).get('image',{})
 				volume_containerPath=volume.get('containerPath', {}).replace('/','_')
@@ -138,13 +141,13 @@ def adapt_app_volumes_for_uri( app, app_server_address ):
 				#now this container needs to mount it to /src in absolute path
 				new_app['volumeMounts'].append( { 
 					"name": "sandbox",
-					"mountPath": "/src/app"
+					"mountPath": volume['containerPath'] #"/src/app"
 				} )
 
 				#remove the volume
 				del( volume )
 
-	return( new_app )
+	return( new_app, hostPath )
 
 
 
