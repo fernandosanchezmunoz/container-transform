@@ -135,10 +135,10 @@ def adapt_app_volumes_for_uri( app, app_server_address ):
 				#artifact will be downloaded to /mnt/mesos/sandbox
 				#this is mounted in the pod as relative local volume with name "sandbox" above
 				#now this container needs to mount it to /src in absolute path
-				new_app['volumeMounts'] += { 
+				new_app['volumeMounts'].append( { 
 					"name": "sandbox",
 					"mountPath": "/src"
-				}
+				} )
 
 				#remove the volume
 				del( volume )
