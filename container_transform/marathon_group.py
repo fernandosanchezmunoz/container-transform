@@ -9,7 +9,7 @@ import sys
 import argparse
 import subprocess
 import os
-import ast
+import collections
 
 def create_pod( name, apps, app_server_address ):
 	"""
@@ -53,11 +53,13 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 	Receives a list of apps in Marathon single container format.
 	Returns a list of those containers adapted to the Marathon pod format.
 	"""
+	COMMAND = "cp -r $MESOS_SANDBOX/* $(pwd); npm start"
 
 	pod_apps=[]
 	app_list = json.loads(apps)
 	for app in app_list:
-		temp_app = {}
+		#temp_app = {}
+		temp_app = collections.defaultdict(dict) #in order to add nested dicts
 		temp_app['name'] = app['id']
 		#TODO: figure out resources
 		temp_app['resources'] = {
@@ -68,9 +70,11 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		print("**DEBUG: app is {0}".format(app))
 		app_uris = adapt_app_volumes_for_uri( app, app_server_address )
 		print("**DEBUG: app with URIs is {0}".format(app_uris))
-		temp_app['artifacts'] = []
+		#temp_app['artifacts'] = []
 		for uri in app_uris.get( 'uris', [] ):
 			temp_app['artifacts'].append( { "uri": uri } )
+		#TODO: trick to download URI content to "/src" as NPM starts there
+		temp_app['exec']['command']['shell'] = COMMAND
 		#adapt port mappings
 		temp_app['endpoints'] = []
 		container = app_uris['container']  #container is embedded in app
