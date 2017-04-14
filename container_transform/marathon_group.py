@@ -73,13 +73,14 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		temp_app['artifacts'] = []
 		for uri in app_uris.get( 'uris', [] ):
 			temp_app['artifacts'].append( { 
-				"uri": uri,
-				"destPath": "/app.tgz" 
+				"uri": uri
 				} )
 			#TODO: trick to download URI content to "/src" as NPM starts there
 			#temp_app['exec'] = {}
 			#temp_app['exec']['command'] = {}
 			#temp_app['exec']['command']['shell'] = COMMAND
+		#fix prefix path
+		temp_app['parameters'] = [ { "key": "prefix-path", "value": "$MESOS_SANDBOX/src" } ]
 		#adapt port mappings
 		temp_app['endpoints'] = []
 		container = app_uris['container']  #container is embedded in app
