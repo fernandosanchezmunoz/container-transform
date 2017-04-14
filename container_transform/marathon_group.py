@@ -28,7 +28,7 @@ def create_pod( name, apps, app_server_address ):
 
 	output = '{ 									\
 	  "id": "/'+name+'",							\
-	  "containers": '+pod_apps+',					\
+	  "containers": "'+pod_apps+'",					\
   	  "networks": [									\
         {											\
           "mode": "host"							\
