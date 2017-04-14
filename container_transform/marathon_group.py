@@ -11,7 +11,7 @@ import subprocess
 import os
 import ast
 
-def create_pod( name, containers ):
+def create_pod( name, containers, app_server_address ):
 	"""
 	Creates a marathon pod taking a list of containers as a parameter.
 	If the list has a single member if returns the member.
@@ -23,21 +23,22 @@ def create_pod( name, containers ):
 	pod_cpu="0.5"
 	pod_mem="256"
 	pod_disk="256"
+
 	#adapt all containers to pod format
-	pod_containers = adapt_containers_to_pod( containers, name )
+	pod_apps = adapt_apps_to_pod( containers, name, app_server_address )
 
 	output = '{ 									\
-	  "id": "/'+name+'",								\
-	  "containers": '+pod_containers+',				\
+	  "id": "/'+name+'",							\
+	  "containers": '+pod_apps+',					\
   	  "networks": [									\
         {											\
           "mode": "host"							\
         }											\
       ],											\
 	  "executorResources": {						\
-        "cpus": "'+str(pod_cpu)+'",						\
-        "mem": "'+str(pod_mem)+'",						\
-        "disk": "'+str(pod_disk)+'"						\
+        "cpus": "'+str(pod_cpu)+'",					\
+        "mem": "'+str(pod_mem)+'",					\
+        "disk": "'+str(pod_disk)+'"					\
 	  },											\
       "labels": {									\
         "HAPROXY_GROUP": "external"					\
@@ -47,37 +48,72 @@ def create_pod( name, containers ):
 
 	return str(output)
 
-def adapt_containers_to_pod( containers, name ):
+def adapt_apps_to_pod( apps, name, app_server_address ):
 	"""
-	Receives a list of containers in Marathon single container format.
+	Receives a list of apps in Marathon single container format.
 	Returns a list of those containers adapted to the Marathon pod format.
 	"""
 
-	pod_containers=[]
-	container_list = json.loads(containers)
-	for container in container_list:
-		temp_container = {}
-		temp_container['name'] = container['id']
+	pod_apps=[]
+	app_list = json.loads(apps)
+	for app in app_list:
+		temp_app = {}
+		temp_app['name'] = app['id']
 		#TODO: figure out resources
-		temp_container['endpoints'] = []
-		container = container['container']  #it's embedded
+		temp_app['endpoints'] = []\
+		#adapt volumes
+		print("**DEBUG: app is {0}".format(app))
+		app = adapt_app_volumes_for_uri( app, app_server_address )
+		print("**DEBUG: app with URIs is {0}".format(app))
+		#adapt port mappings
+		container = app['container']  #container is embedded in app
 		print("**DEBUG: container is {0}".format(container))
-		if 'portMappings' in container['docker']:
-			for portMapping in container['docker']['portMappings']:
-				endpoint = {}
-				endpoint['name'] = name+str(portMapping['containerPort'])
-				endpoint['hostPort'] = portMapping['hostPort']
-				endpoint['protocol'] = [ portMapping['protocol'] ]
-				temp_container['endpoints'].append(endpoint)
-		temp_container['image'] = { } 
-		temp_container['image']['kind'] = container['type']
-		temp_container['image']['id'] = container['docker']['image']
-		print("**DEBUG: temp_container is {0}".format(temp_container))
-		pod_containers.append(temp_container)
-		print("**DEBUG: pod_containers is {0}".format(pod_containers))
+		for portMapping in container.get('docker', {}).get('portMappings', {}):
+			endpoint = {}
+			endpoint['name'] = name+str(portMapping['containerPort'])
+			endpoint['hostPort'] = portMapping['hostPort']
+			endpoint['protocol'] = [ portMapping['protocol'] ]
+			temp_app['endpoints'].append(endpoint)
+		temp_app['image'] = { } 
+		temp_app['image']['kind'] = container['type']
+		temp_app['image']['id'] = container['docker']['image']
+		print("**DEBUG: temp_app is {0}".format(temp_app))
+		pod_apps.append(temp_container)
+		print("**DEBUG: pod_apps is {0}".format(pod_apps))
 
-	print("**DEBUG: pod_containers is {0}".format(pod_containers))
-	return json.dumps(pod_containers)
+	print("**DEBUG: pod_apps is {0}".format(pod_apps))
+	return json.dumps(pod_apps)
+
+
+def adapt_app_volumes_for_uri( app, app_server_address ):
+	"""
+	converts a marathon app with a list of container volumes with links to current directory in a
+	marathon app wih a list of uris to be downloaded from a web server.
+	"""
+	#modify all volumes in the groups apps so that "this directory" volumes become external or downloaded from URI
+	for volume in app.get('volumes', {}):
+			if volume['hostPath'][:2] == "./":			#if the volume is "this dir" for compose
+				#FIRST CASE: using external persistent volumes, map ./DIR to a volume called DIR
+				#volume = modify_volume_for_external( volume, group_dict['id']+'-'+app['id'] )	
+						#modify it so that the local files are reachable via external volume
+				#SECOND CASE: generate an artifact with the code in the local volume and add it as a URI
+				container_id=app.get('docker', {}).get('image', {})
+				volume_containerPath=volume.get('containerPath', {}).replace('/','_')
+				artifact_name = create_artifact_from_volume( volume, container_id+'-'+volume_containerPath, app_server_address )
+				uri = "http://"+app_server_address+"/"+artifact_name
+				if 'uris' in app:
+					app['uris'].append( uri )
+				else:
+					app['uris'] = [ uri ]
+				#artifact will be downloaded to /mnt/mesos/sandbox
+				#remove the volume
+				del( volume )
+
+	return( app )
+
+
+
+
 
 def create_group ( name, containers ):
 	"""
@@ -418,6 +454,7 @@ def modify_group ( group, app_server_address ):
 
 	return json.dumps( group_dict )
 
+
 if __name__ == "__main__":
 
 	#parse command line arguments
@@ -444,7 +481,7 @@ if __name__ == "__main__":
 		modified_group = modify_group( group, args['server'] )
 		print( modified_group, file=output_file )
 	else:
-		pod = create_pod( args['name'], containers )
+		pod = create_pod( args['name'], containers, args['server'] )
 		print( pod, file=output_file )
 
 	input( "***DEBUG: Press ENTER to continue...")
