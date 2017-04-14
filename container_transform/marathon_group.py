@@ -58,6 +58,7 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 	#COMMAND = "cp -r $MESOS_SANDBOX/* $(pwd); npm start"
 	app_cpu = 0.3
 	app_mem = 256
+	hostPath = ""
 
 	pod_apps=[]
 	app_list = json.loads(apps)
@@ -114,6 +115,7 @@ def adapt_app_volumes_for_uri( app, app_server_address ):
 
 	new_app = app.copy()
 	new_app['volumeMounts'] = []
+	hostPath = ""
 
 	#modify all volumes in the groups apps so that "this directory" volumes become external or downloaded from URI
 	for volume in new_app.get('container',{}).get('volumes', {}):
