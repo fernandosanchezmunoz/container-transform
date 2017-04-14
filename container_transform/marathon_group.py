@@ -68,6 +68,7 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		print("**DEBUG: app is {0}".format(app))
 		app_uris = adapt_app_volumes_for_uri( app, app_server_address )
 		print("**DEBUG: app with URIs is {0}".format(app_uris))
+		temp_app['artifacts'] = []
 		for uri in app_uris.get( 'uris', [] ):
 			temp_app['artifacts'].append( { "uri": uri } )
 		#adapt port mappings
@@ -83,7 +84,6 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		temp_app['image'] = { } 
 		temp_app['image']['kind'] = container['type']
 		temp_app['image']['id'] = container['docker']['image']
-		temp_app['artifacts'] = []
 		print("**DEBUG: temp_app is {0}".format(temp_app))
 		pod_apps.append(temp_app)
 		print("**DEBUG: pod_apps is {0}".format(pod_apps))
