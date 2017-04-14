@@ -100,6 +100,7 @@ def adapt_app_volumes_for_uri( app, app_server_address ):
 				container_id=app.get('docker', {}).get('image', {})
 				volume_containerPath=volume.get('containerPath', {}).replace('/','_')
 				artifact_name = create_artifact_from_volume( volume, container_id+'-'+volume_containerPath, app_server_address )
+				print("**DEBUG: ARTIFACT NAME is {0}".format(artifact_name))
 				uri = "http://"+app_server_address+"/"+artifact_name
 				if 'uris' in app:
 					app['uris'].append( uri )
