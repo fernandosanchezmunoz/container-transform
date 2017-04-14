@@ -63,10 +63,10 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		temp_app['endpoints'] = []\
 		#adapt volumes
 		print("**DEBUG: app is {0}".format(app))
-		app = adapt_app_volumes_for_uri( app, app_server_address )
-		print("**DEBUG: app with URIs is {0}".format(app))
+		app_uris = adapt_app_volumes_for_uri( app, app_server_address )
+		print("**DEBUG: app with URIs is {0}".format(app_uris))
 		#adapt port mappings
-		container = app['container']  #container is embedded in app
+		container = app_uris['container']  #container is embedded in app
 		print("**DEBUG: container is {0}".format(container))
 		for portMapping in container.get('docker', {}).get('portMappings', {}):
 			endpoint = {}
