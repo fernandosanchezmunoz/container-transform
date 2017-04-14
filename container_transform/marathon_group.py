@@ -94,6 +94,7 @@ def adapt_app_volumes_for_uri( app, app_server_address ):
 
 	#modify all volumes in the groups apps so that "this directory" volumes become external or downloaded from URI
 	for volume in app.get('volumes', {}):
+			print("**DEBUG: VOLUME is {0}".format(volume))
 			if volume['hostPath'][:2] == "./":			#if the volume is "this dir" for compose
 				#FIRST CASE: using external persistent volumes, map ./DIR to a volume called DIR
 				#volume = modify_volume_for_external( volume, group_dict['id']+'-'+app['id'] )	
