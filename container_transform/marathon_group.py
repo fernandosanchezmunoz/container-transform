@@ -352,7 +352,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	staging_mount_point = "/tmp/ctransform"
 
 	#create an artifact 
-	artifact_name = host_path[2:].replace('/','_')+".tgz"
+	artifact_name = app_name+"_"+host_path[2:].replace('/','_')+".tgz"
 
 	#create subdir for staging with containerpath
 	#staging_dir = staging_mount_point+"/"+container_path[1:]+"/"
@@ -398,10 +398,12 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	#(out, err) = proc.communicate()
 
+
 	print("**DEBUG: cd to {0} ".format(staging_app_dir))
 	command = "cd "+staging_app_dir
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
+
 
 	print("**DEBUG: Compress {0} into {1} with relative path {2}".format(staging_app_dir, artifact_name, staging_app_dir ))
 	command = "tar -czvf "+artifact_name+" -C "+staging_app_dir+" ." #compress this directory
