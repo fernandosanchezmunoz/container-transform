@@ -352,7 +352,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	staging_mount_point = "/tmp/ctransform"
 
 	#create an artifact 
-	artifact_name = app_name.replace('/','_')+'-'+host_path[2:].replace('/','_')+".tgz"
+	artifact_name = host_path[2:].replace('/','_')+".tgz"
 
 	#create subdir for staging with containerpath
 	#staging_dir = staging_mount_point+"/"+container_path[1:]+"/"
@@ -390,6 +390,14 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	input( "***DEBUG: Press ENTER to continue...")
 
 	#compress staging_dir to artifact
+	#create an artifact name inside the staging dir
+	#artifact_path = app_name+"/"+artifact_name
+	#make artifact path dir
+	#print("**DEBUG: mkdir artifact path {0} in staging app dir {1} ".format(artifact_path, staging_app_dir))
+	#command = "mkdir -p "+staging_app_dir+"/"+artifact_path
+	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	#(out, err) = proc.communicate()
+
 	print("**DEBUG: cd to {0} ".format(staging_app_dir))
 	command = "cd "+staging_app_dir
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
@@ -403,13 +411,6 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	input( "***DEBUG: Press ENTER to continue...")
 
 	#TODO: put artifact in web server
-	#create an artifact name inside the staging dir
-	artifact_path = app_name+"/"+artifact_name
-	#make artifact path dir
-	print("**DEBUG: mkdir artifact path {0} in staging app dir {1} ".format(artifact_path, staging_app_dir))
-	command = "mkdir -p "+staging_app_dir+"/"+artifact_path
-	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()
 
 	#move to web server
 	web_server_location="/root/DCOS_install/genconf/serve"
