@@ -81,6 +81,7 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		temp_app['image'] = { } 
 		temp_app['image']['kind'] = container['type']
 		temp_app['image']['id'] = container['docker']['image']
+		temp_app['artifacts'] = []
 		for uri in app_uris.get( 'uris', [] ):
 			temp_app['artifacts'].append( { "uri": uri } )
 		print("**DEBUG: temp_app is {0}".format(temp_app))
