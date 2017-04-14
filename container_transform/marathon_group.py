@@ -92,29 +92,31 @@ def adapt_app_volumes_for_uri( app, app_server_address ):
 	"""
 	print("**DEBUG: APP is {0}".format(app))
 
+	new_app = app.copy()
+
 	#modify all volumes in the groups apps so that "this directory" volumes become external or downloaded from URI
-	for volume in app.get('container',{}).get('volumes', {}):
+	for volume in new_app.get('container',{}).get('volumes', {}):
 			print("**DEBUG: VOLUME is {0}".format(volume))
 			if volume['hostPath'][:2] == "./":			#if the volume is "this dir" for compose
 				#FIRST CASE: using external persistent volumes, map ./DIR to a volume called DIR
 				#volume = modify_volume_for_external( volume, group_dict['id']+'-'+app['id'] )	
 						#modify it so that the local files are reachable via external volume
 				#SECOND CASE: generate an artifact with the code in the local volume and add it as a URI
-				app_id=app.get('id', {})
-				container_id=app.get('container', {}).get('docker',{}).get('image',{})
+				app_id=new_app.get('id', {})
+				container_id=new_app.get('container', {}).get('docker',{}).get('image',{})
 				volume_containerPath=volume.get('containerPath', {}).replace('/','_')
 				artifact_name = create_artifact_from_volume( volume, app_id+'-'+container_id+'-'+volume_containerPath, app_server_address )
 				print("**DEBUG: ARTIFACT NAME is {0}".format(artifact_name))
 				uri = "http://"+app_server_address+"/"+artifact_name
-				if 'uris' in app:
-					app['uris'].append( uri )
+				if 'uris' in new_app:
+					new_app['uris'].append( uri )
 				else:
-					app['uris'] = [ uri ]
+					new_app['uris'] = [ uri ]
 				#artifact will be downloaded to /mnt/mesos/sandbox
 				#remove the volume
 				del( volume )
 
-	return( app )
+	return( new_app )
 
 
 
