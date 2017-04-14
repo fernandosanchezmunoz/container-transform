@@ -27,7 +27,7 @@ def create_pod( name, containers ):
 	pod_containers = adapt_containers_to_pod( containers, name )
 
 	output = '{ 									\
-	  "id": "'+name+'",								\
+	  "id": "/'+name+'",								\
 	  "containers": '+pod_containers+',				\
   	  "networks": [									\
         {											\
