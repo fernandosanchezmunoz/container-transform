@@ -19,9 +19,9 @@ def create_pod( name, apps, app_server_address ):
 	#first_container = json.loads( containers[0] )
 	#get port mapping
 	#TODO: get relevant info from first container
-	pod_cpu=0.5
-	pod_mem=512
-	pod_disk=500
+	pod_cpu="0.5"
+	pod_mem="512"
+	pod_disk="500"
 
 	#adapt all containers to pod format
 	pod_apps = adapt_apps_to_pod( apps, name, app_server_address )
