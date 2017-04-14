@@ -21,7 +21,7 @@ def create_pod( name, apps, app_server_address ):
 	#TODO: get relevant info from first container
 	pod_cpu=0.5
 	pod_mem=512
-	pod_disk=50
+	pod_disk=500
 
 	#adapt all containers to pod format
 	pod_apps = adapt_apps_to_pod( apps, name, app_server_address )
@@ -35,9 +35,9 @@ def create_pod( name, apps, app_server_address ):
         }											\
       ],											\
 	  "executorResources": {						\
-        "cpus": "'+pod_cpu+'",					\
-        "mem": "'+pod_mem+'",					\
-        "disk": "'+pod_disk+'"					\
+        "cpus": "'+pod_cpu+'",						\
+        "mem": "'+pod_mem+'",						\
+        "disk": "'+pod_disk+'"						\
 	  },											\
       "labels": {									\
         "HAPROXY_GROUP": "external"					\
