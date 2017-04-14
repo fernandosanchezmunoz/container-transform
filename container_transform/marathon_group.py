@@ -36,7 +36,7 @@ def create_pod( name, apps, app_server_address ):
       ],											\
 	  "executorResources": {						\
         "cpus": '+str(pod_cpu)+',					\
-        "mem": '+str(pod_mem)+',					\
+        "mem": '+str(pod_mem)+'						\
 	  },											\
       "labels": {									\
         "HAPROXY_GROUP": "external"					\
@@ -67,7 +67,7 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		#TODO: figure out resources
 		temp_app['resources'] = {
 		"cpus": app_cpu,
-		"mem": app_mem,
+		"mem": app_mem
 		}
 		#adapt volumes
 		print("**DEBUG: app is {0}".format(app))
