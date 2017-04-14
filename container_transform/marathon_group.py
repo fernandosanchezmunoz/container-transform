@@ -77,7 +77,7 @@ def adapt_containers_to_pod( containers, name ):
 		print("**DEBUG: pod_containers is {0}".format(pod_containers))
 
 	print("**DEBUG: pod_containers is {0}".format(pod_containers))
-	return pod_containers
+	return json.dumps(pod_containers)
 
 def create_group ( name, containers ):
 	"""
