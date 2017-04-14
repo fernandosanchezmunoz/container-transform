@@ -101,7 +101,7 @@ def adapt_app_volumes_for_uri( app, app_server_address ):
 						#modify it so that the local files are reachable via external volume
 				#SECOND CASE: generate an artifact with the code in the local volume and add it as a URI
 				app_id=app.get('id', {})
-				container_id=app.get('container', {}).get('docker'.{}).get('image',{})
+				container_id=app.get('container', {}).get('docker',{}).get('image',{})
 				volume_containerPath=volume.get('containerPath', {}).replace('/','_')
 				artifact_name = create_artifact_from_volume( volume, app_id+'-'+container_id+'-'+volume_containerPath, app_server_address )
 				print("**DEBUG: ARTIFACT NAME is {0}".format(artifact_name))
