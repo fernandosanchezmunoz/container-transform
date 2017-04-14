@@ -406,7 +406,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 
 
 	print("**DEBUG: Compress {0} into {1} with relative path {2}".format(staging_app_dir, artifact_name, staging_app_dir ))
-	command = "tar -czvf "+artifact_name+" -C "+staging_app_dir+" ." #compress this directory
+	command = "tar -czvf "+staging_app_dir+"/"+artifact_name+" -C "+staging_app_dir+" ." #compress this directory
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
