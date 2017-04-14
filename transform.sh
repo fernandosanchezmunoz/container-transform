@@ -18,7 +18,7 @@ MY_IP=$(ip addr show eth0 | grep -Eo \
 if [[ $COMMAND_PIP_CHECK == *"container-transform"* ]]; then
 	echo "**INFO: container-transform available."
 else
-	echo "**INFO: container-transform available."
+	echo "**INFO: container-transform unavailable. Installing..."
 	pip install container-transform
 fi
 
