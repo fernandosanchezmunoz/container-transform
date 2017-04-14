@@ -64,7 +64,9 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		#TODO: figure out resources
 		temp_app['resources'] = {
 		"cpus": app_cpu,
-		"mem": app_mem
+		"mem": app_mem,
+		"disk": 0,
+		"gpus": 0
 		}
 		#adapt volumes
 		print("**DEBUG: app is {0}".format(app))
