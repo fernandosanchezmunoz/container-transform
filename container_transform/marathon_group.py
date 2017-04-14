@@ -19,9 +19,9 @@ def create_pod( name, apps, app_server_address ):
 	#first_container = json.loads( containers[0] )
 	#get port mapping
 	#TODO: get relevant info from first container
-	pod_cpu="0.5"
-	pod_mem="512"
-	pod_disk="50"
+	pod_cpu=0.5
+	pod_mem=512
+	#pod_disk=50
 
 	#adapt all containers to pod format
 	pod_apps = adapt_apps_to_pod( apps, name, app_server_address )
@@ -35,13 +35,16 @@ def create_pod( name, apps, app_server_address ):
         }											\
       ],											\
 	  "executorResources": {						\
-        "cpus": "'+str(pod_cpu)+'",					\
-        "mem": "'+str(pod_mem)+'",					\
-        "disk": "'+str(pod_disk)+'"					\
+        "cpus": '+str(pod_cpu)+',					\
+        "mem": '+str(pod_mem)+',					\
 	  },											\
       "labels": {									\
         "HAPROXY_GROUP": "external"					\
-      }												\
+      },											\
+      "volumes": [ { 								\
+      	"name": "sandbox",							\
+      	"host": "src"								\
+      	}]											\
 	  }'
 
 
@@ -53,8 +56,8 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 	Returns a list of those containers adapted to the Marathon pod format.
 	"""
 	COMMAND = "cp -r $MESOS_SANDBOX/* $(pwd); npm start"
-	app_cpu = "0.3"
-	app_mem = "256"
+	app_cpu = 0.3
+	app_mem = 256
 
 	pod_apps=[]
 	app_list = json.loads(apps)
@@ -65,8 +68,6 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		temp_app['resources'] = {
 		"cpus": app_cpu,
 		"mem": app_mem,
-		"disk": "0",
-		"gpus": "0"
 		}
 		#adapt volumes
 		print("**DEBUG: app is {0}".format(app))
@@ -81,8 +82,6 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 			#temp_app['exec'] = {}
 			#temp_app['exec']['command'] = {}
 			#temp_app['exec']['command']['shell'] = COMMAND
-		#fix prefix path
-		temp_app['parameters'] = [ { "key": "prefix-path", "value": "$MESOS_SANDBOX/src" } ]
 		#adapt port mappings
 		temp_app['endpoints'] = []
 		container = app_uris['container']  #container is embedded in app
@@ -113,6 +112,7 @@ def adapt_app_volumes_for_uri( app, app_server_address ):
 	print("**DEBUG: APP is {0}".format(app))
 
 	new_app = app.copy()
+	new_app['volumeMounts'] = []
 
 	#modify all volumes in the groups apps so that "this directory" volumes become external or downloaded from URI
 	for volume in new_app.get('container',{}).get('volumes', {}):
@@ -133,6 +133,13 @@ def adapt_app_volumes_for_uri( app, app_server_address ):
 				else:
 					new_app['uris'] = [ uri ]
 				#artifact will be downloaded to /mnt/mesos/sandbox
+				#this is mounted in the pod as relative local volume with name "sandbox" above
+				#now this container needs to mount it to /src in absolute path
+				new_app['volumeMounts'] += { 
+					"name": "sandbox",
+					"mountPath": "/src"
+				}
+
 				#remove the volume
 				del( volume )
 
