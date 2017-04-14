@@ -78,7 +78,7 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		temp_app['image']['kind'] = container['type']
 		temp_app['image']['id'] = container['docker']['image']
 		print("**DEBUG: temp_app is {0}".format(temp_app))
-		pod_apps.append(temp_container)
+		pod_apps.append(temp_app)
 		print("**DEBUG: pod_apps is {0}".format(pod_apps))
 
 	print("**DEBUG: pod_apps is {0}".format(pod_apps))
