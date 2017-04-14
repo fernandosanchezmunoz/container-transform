@@ -411,7 +411,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	#move to web server
 	web_server_location="/root/DCOS_install/genconf/serve"
 	print("**DEBUG: mv {0} into {1}".format(staging_app_dir+"/"+artifact_path, web_server_location))
-	command = "mv "+staging_app_dir+"/"+artifact_path" "+web_server_location
+	command = "mv "+staging_app_dir+"/"+artifact_path+" "+web_server_location
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
