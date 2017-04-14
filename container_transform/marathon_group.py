@@ -28,7 +28,7 @@ def create_pod( name, containers ):
 
 	output = '{ 									\
 	  "id": "'+name+'",								\
-	  "containers": "'+json.loads(str(pod_containers)+'",		\
+	  "containers": "'+json.loads(str(pod_containers))+'",		\
   	  "networks": [									\
         {											\
           "mode": "host"							\
