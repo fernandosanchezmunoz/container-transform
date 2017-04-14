@@ -21,8 +21,8 @@ def create_pod( name, containers, app_server_address ):
 	#get port mapping
 	#TODO: get relevant info from first container
 	pod_cpu="0.5"
-	pod_mem="256"
-	pod_disk="256"
+	pod_mem="512"
+	pod_disk="50"
 
 	#adapt all containers to pod format
 	pod_apps = adapt_apps_to_pod( containers, name, app_server_address )
@@ -61,7 +61,7 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		temp_app['name'] = app['id']
 		#TODO: figure out resources
 		temp_app['resources'] = {
-		"cpus": "0.2",
+		"cpus": "0.3",
 		"mem": "256"
 		}
 		#adapt volumes
