@@ -11,9 +11,9 @@ import subprocess
 import os
 import ast
 
-def create_pod( name, containers, app_server_address ):
+def create_pod( name, apps, app_server_address ):
 	"""
-	Creates a marathon pod taking a list of containers as a parameter.
+	Creates a marathon pod taking a list of apps as a parameter.
 	If the list has a single member if returns the member.
 	"""
 	#get relevant information of first container
@@ -25,7 +25,7 @@ def create_pod( name, containers, app_server_address ):
 	pod_disk="50"
 
 	#adapt all containers to pod format
-	pod_apps = adapt_apps_to_pod( containers, name, app_server_address )
+	pod_apps = adapt_apps_to_pod( apps, name, app_server_address )
 
 	output = '{ 									\
 	  "id": "/'+name+'",							\
