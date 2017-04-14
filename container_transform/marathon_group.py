@@ -90,6 +90,8 @@ def adapt_app_volumes_for_uri( app, app_server_address ):
 	converts a marathon app with a list of container volumes with links to current directory in a
 	marathon app wih a list of uris to be downloaded from a web server.
 	"""
+	print("**DEBUG: APP is {0}".format(app))
+
 	#modify all volumes in the groups apps so that "this directory" volumes become external or downloaded from URI
 	for volume in app.get('volumes', {}):
 			if volume['hostPath'][:2] == "./":			#if the volume is "this dir" for compose
