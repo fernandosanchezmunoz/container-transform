@@ -401,6 +401,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()		
 
+	input( "***DEBUG: Press ENTER to continue...")
 	#copy contents to staging dir
 	#if it's a directory, add "/." to copy contents not directory
 	host_path_to_copy=host_path
@@ -436,7 +437,8 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
-
+	input( "***DEBUG: Press ENTER to continue...")
+	
 	print("**DEBUG: Compress {0} into {1} with relative path {2}".format(staging_app_dir, artifact_name, staging_app_dir ))
 	command = "tar -czvf "+staging_app_dir+"/"+artifact_name+" -C "+staging_app_dir+" ." #compress this directory
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
