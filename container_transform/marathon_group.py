@@ -43,7 +43,7 @@ def create_pod( name, apps, app_server_address ):
       },											\
       "volumes": [ { 								\
       	"name": "sandbox",							\
-      	"host": "src"								\
+      	"host": "src/app"							\
       	}]											\
 	  }'
 
