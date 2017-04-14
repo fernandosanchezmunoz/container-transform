@@ -351,9 +351,6 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	  last_part_of_container_path = ""
 	staging_mount_point = "/tmp/ctransform"
 
-	#create an artifact 
-	artifact_name = app_name.replace('/','_')+".tgz"+'-'+host_path[2:].replace('/','_')+".tgz"
-
 	#create subdir for staging with containerpath
 	#staging_dir = staging_mount_point+"/"+container_path[1:]+"/"
 	if os.path.isdir(host_path):
@@ -395,7 +392,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
-	print("**DEBUG: Compress {0} into {1} with relative path".format(staging_app_dir, artifact_name ))
+	print("**DEBUG: Compress {0} into {1} with relative path {2}".format(staging_app_dir, artifact_name, staging_app_dir ))
 	command = "tar -czvf "+artifact_name+" -C "+staging_app_dir+" ." #compress this directory
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
@@ -403,9 +400,18 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	input( "***DEBUG: Press ENTER to continue...")
 
 	#TODO: put artifact in web server
+	#create an artifact name inside the staging dir
+	artifact_path = app_name+"/"+artifact_name
+	#make artifact path dir
+	print("**DEBUG: mkdir artifact path {0} in staging app dir {1} ".format(artifact_path, staging_app_dir))
+	command = "mkdir -p "+staging_app_dir+"/"+artifact_path
+	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	(out, err) = proc.communicate()
+
+	#move to web server
 	web_server_location="/root/DCOS_install/genconf/serve"
-	print("**DEBUG: mv {0} into {1}".format(staging_app_dir+"/"+artifact_name, web_server_location))
-	command = "mv "+staging_app_dir+"/"+artifact_name+" "+web_server_location
+	print("**DEBUG: mv {0} into {1}".format(staging_app_dir+"/"+artifact_path, web_server_location))
+	command = "mv "+staging_app_dir+"/"+artifact_path" "+web_server_location
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
 	(out, err) = proc.communicate()
 
