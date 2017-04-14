@@ -396,10 +396,14 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 
 	staging_app_dir =staging_mount_point+"/"+app_name # /tmp/ctransform/nginx-php-group-web
 	staging_container_path = staging_app_dir+container_dir #/tmp/ctransform/nginx-php-group-web/etc/nginx/conf.d
-	print("**DEBUG: Create staging container path {0}".format(staging_container_path) ) #remove leading slash
-	command = "sudo mkdir -p "+staging_container_path
+	#print("**DEBUG: Create staging container path {0}".format(staging_container_path) ) #remove leading slash
+	#command = "sudo mkdir -p "+staging_container_path
+	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	#(out, err) = proc.communicate()
+	print("**DEBUG: Create staging app dir {0}".format(staging_app_dir) ) #remove leading slash
+	command = "sudo mkdir -p "+staging_app_dir
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()		
+	(out, err) = proc.communicate()			
 
 	input( "***DEBUG: Press ENTER to continue...")
 	#copy contents to staging dir
@@ -438,7 +442,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	(out, err) = proc.communicate()
 
 	input( "***DEBUG: Press ENTER to continue...")
-	
+
 	print("**DEBUG: Compress {0} into {1} with relative path {2}".format(staging_app_dir, artifact_name, staging_app_dir ))
 	command = "tar -czvf "+staging_app_dir+"/"+artifact_name+" -C "+staging_app_dir+" ." #compress this directory
 	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
