@@ -74,7 +74,7 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		for uri in app_uris.get( 'uris', [] ):
 			temp_app['artifacts'].append( { 
 				"uri": uri,
-				"destPath": "/" 
+				"destPath": "/app.tgz" 
 				} )
 			#TODO: trick to download URI content to "/src" as NPM starts there
 			#temp_app['exec'] = {}
