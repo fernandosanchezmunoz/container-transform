@@ -15,7 +15,7 @@ def create_pod( name, apps, app_server_address ):
 	"""
 	If the list has a single member if returns the member.
 	"""
-	#get relevant information of first container
+	#get relevant information of first containerz
 	#first_container = json.loads( containers[0] )
 	#get port mapping
 	#TODO: get relevant info from first container
