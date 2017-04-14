@@ -81,7 +81,7 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		temp_app['image'] = { } 
 		temp_app['image']['kind'] = container['type']
 		temp_app['image']['id'] = container['docker']['image']
-		temp_app['artifacts'] = app_uris.get( 'uris', [] )
+		temp_app['artifacts'] = app_uris.get( 'uris', [''] )
 		print("**DEBUG: temp_app is {0}".format(temp_app))
 		pod_apps.append(temp_app)
 		print("**DEBUG: pod_apps is {0}".format(pod_apps))
