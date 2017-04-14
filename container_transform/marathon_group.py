@@ -352,7 +352,7 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	staging_mount_point = "/tmp/ctransform"
 
 	#create an artifact 
-	artifact_name = app_name+'-'+host_path[2:].replace('/','_')+".tgz"
+	artifact_name = app_name.replace('/','_')+".tgz"+'-'+host_path[2:].replace('/','_')+".tgz"
 
 	#create subdir for staging with containerpath
 	#staging_dir = staging_mount_point+"/"+container_path[1:]+"/"
