@@ -35,8 +35,8 @@ def create_pod( name, apps, app_server_address ):
         }											\
       ],											\
 	  "executorResources": {						\
-        "cpus": "'+pod_cpu+'",						\
-        "mem": "'+pod_mem+'"						\
+        "cpus": '+pod_cpu+',						\
+        "mem": '+pod_mem+'						\
 	  },											\
       "labels": {									\
         "HAPROXY_GROUP": "external"					\
