@@ -43,7 +43,7 @@ def create_pod( name, apps, app_server_address ):
       },											\
       "volumes": [ { 								\
       	"name": "sandbox",							\
-      	"host": "src"								\
+      	"host": "src/app"							\
       	}]											\
 	  }'
 
@@ -138,7 +138,7 @@ def adapt_app_volumes_for_uri( app, app_server_address ):
 				#now this container needs to mount it to /src in absolute path
 				new_app['volumeMounts'].append( { 
 					"name": "sandbox",
-					"mountPath": "/src"
+					"mountPath": "/src/app"
 				} )
 
 				#remove the volume
@@ -406,11 +406,13 @@ def create_artifact_from_volume( volume, app_name, app_server_address ):
 	host_path_to_copy=host_path
 	if os.path.isdir(host_path):
 		host_path_to_copy+="/."
-	print("**DEBUG: Copy {0} into {1}".format(host_path_to_copy, staging_container_path))
-	command = "cp -r "+host_path_to_copy+" "+staging_container_path
-	proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
-	(out, err) = proc.communicate()
+	#this copies /src/app
+	#print("**DEBUG: Copy {0} into {1}".format(host_path_to_copy, staging_container_path))
+	#command = "cp -r "+host_path_to_copy+" "+staging_container_path
+	#proc = subprocess.Popen( command, stdout=subprocess.PIPE, shell=True)
+	#(out, err) = proc.communicate()
 
+	#this copies ./app
 	#test for Node.JS -- suspect it doesn't go into staging_container_path and instead it executes from staging_app_dir. Copy there	
 	print("**DEBUG: Copy {0} into {1}".format(host_path_to_copy, staging_app_dir))
 	command = "cp -r "+host_path_to_copy+" "+staging_app_dir+"/"+last_part_of_container_path
