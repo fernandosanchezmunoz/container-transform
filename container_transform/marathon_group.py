@@ -13,30 +13,32 @@ import ast
 
 def create_pod( name, apps, app_server_address ):
 	"""
+	Creates a marathon pod taking a list of apps as a parameter.
 	If the list has a single member if returns the member.
 	"""
-	#get relevant information of first containerz
+	#get relevant information of first container
 	#first_container = json.loads( containers[0] )
 	#get port mapping
 	#TODO: get relevant info from first container
 	pod_cpu="0.5"
 	pod_mem="512"
-	pod_disk="500"
+	pod_disk="50"
 
 	#adapt all containers to pod format
 	pod_apps = adapt_apps_to_pod( apps, name, app_server_address )
 
 	output = '{ 									\
 	  "id": "/'+name+'",							\
-	  "containers": "'+pod_apps+'",					\
+	  "containers": '+pod_apps+',					\
   	  "networks": [									\
         {											\
           "mode": "host"							\
         }											\
       ],											\
 	  "executorResources": {						\
-        "cpus": '+pod_cpu+',						\
-        "mem": '+pod_mem+'						\
+        "cpus": "'+str(pod_cpu)+'",					\
+        "mem": "'+str(pod_mem)+'",					\
+        "disk": "'+str(pod_disk)+'"					\
 	  },											\
       "labels": {									\
         "HAPROXY_GROUP": "external"					\
