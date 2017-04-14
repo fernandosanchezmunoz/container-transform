@@ -73,6 +73,7 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 		print("**DEBUG: app is {0}".format(app))
 		app_uris = adapt_app_volumes_for_uri( app, app_server_address )
 		print("**DEBUG: app with URIs is {0}".format(app_uris))
+		temp_app['volumeMounts'] = app_uris.get('volumeMounts', [])
 		temp_app['artifacts'] = []
 		for uri in app_uris.get( 'uris', [] ):
 			temp_app['artifacts'].append( { 
