@@ -93,7 +93,8 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 			endpoint['name'] = name+str(portMapping['containerPort'])
 			endpoint['hostPort'] = portMapping['hostPort']
 			endpoint['protocol'] = [ portMapping['protocol'] ]
-			endpoint['labels'] = { "VIP_0": "/"+name+":"+str(portMapping['hostPort']) }
+			#endpoint['labels'] = { "VIP_0": "/"+name+":"+str(portMapping['hostPort']) }
+                        endpoint['labels'] = { "VIP_0": "/composeapp.marathon.l4lb.thisdcos.directory:3000" }
 			temp_app['endpoints'].append(endpoint)
 		temp_app['image'] = { } 
 		temp_app['image']['kind'] = container['type']
