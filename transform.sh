@@ -36,7 +36,7 @@ container-transform -i compose -o marathon docker-compose.yml > marathon.json
 echo "***** MARATHON.JSON *****"
 cat marathon.json
 ../../container_transform/marathon_group.py -i marathon.json -n ${PWD##*/} -s $MY_IP #produces group.json
-echo "***** GROUP.JSON *****"
+echo "***** OUTPUT.JSON *****"
 cat output.json
 
 dcos auth login && \
