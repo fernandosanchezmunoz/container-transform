@@ -94,7 +94,7 @@ def adapt_apps_to_pod( apps, name, app_server_address ):
 			endpoint['hostPort'] = portMapping['containerPort']
 			endpoint['protocol'] = [ portMapping['protocol'] ]
 			#endpoint['labels'] = { "VIP_0": "/"+name+":"+str(portMapping['hostPort']) }
-			endpoint['labels'] = { "VIP_0": "/composeapp:"+str(endpoint['containerPort']) }
+			endpoint['labels'] = { "VIP_0": "/composeapp:"+str(endpoint['hostPort']) }
 			#kk
 			temp_app['endpoints'].append(endpoint)
 		temp_app['image'] = { } 
